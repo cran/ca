@@ -80,15 +80,21 @@ ca <- function(obj,
  # check for subset CA
   dim.N <- dim(N)
   if (!is.na(subsetrow[1])) {
-    dim.N[1] <- min(c(length(subsetrow) + 1, dim.N[1]))
+    dim.N[1] <- min(c(length(subsetrow), dim.N[1]))
+   # dim.N <- dim(N) + 1
     if (!is.na(supcol[1])) SC <- as.matrix(SC[subsetrow,])
     }
   if (!is.na(subsetcol[1])) {
-    dim.N[2] <- min(c(length(subsetcol) + 1, dim.N[2]))
+    dim.N[2] <- min(c(length(subsetcol), dim.N[2]))
+   # dim.N <- dim(N) + 1
     if (!is.na(suprow[1])) SR <- matrix(as.matrix(SR[,subsetcol]), nrow = length(suprow))
     }
  # end subset CA
-  nd.max <- min(dim.N) - 1
+  if (!is.na(subsetrow[1]) | !is.na(subsetcol[1])) {
+     nd.max <- min(dim.N)
+     } else {
+       nd.max <- min(dim.N) - 1
+       }
   if (is.na(nd) | nd > nd.max ) nd <- nd.max
 
  # Init:
@@ -112,7 +118,8 @@ ca <- function(obj,
   chimat <- S^2 * n
   dec    <- svd(S)
   #sv     <- dec$d[1:nd]
-  sv     <- dec$d[1:(min(dim(S))-1)]
+  #sv     <- dec$d[1:(min(dim(S))-1)]
+  sv     <- dec$d[1:nd.max]
   u      <- dec$u
   v      <- dec$v
   ev     <- sv^2

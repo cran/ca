@@ -2,12 +2,12 @@
 \alias{plot.mjca}
 \title{Plotting 2D maps in multiple and joint correspondence analysis}
 \description{Graphical display of multiple and joint correspondence analysis results in two dimensions}
-\usage{plot.mjca(x, dim = c(1,2), map = "symmetric", centroids = FALSE, what = c("all", "all"), 
+\usage{\method{plot}{mjca}(x, dim = c(1,2), map = "symmetric", centroids = FALSE, what = c("all", "all"), 
                mass = c(FALSE, FALSE), contrib = c("none", "none"), 
                col = c("#000000", "#FF0000"), pch = c(16, 1, 17, 24), 
                labels = c(2, 2), arrows = c(FALSE, FALSE), ...) }
 \arguments{
-  \item{x}{Simple correspondence analysis object returned by \code{\link{ca}}}
+  \item{x}{Multiple or joint correspondence analysis object returned by \code{\link{mjca}}}
   \item{dim}{Numerical vector of length 2 indicating the dimensions to plot on horizontal and vertical axes respectively; default is first dimension horizontal and second dimension vertical.}
   \item{map}{Character string specifying the map type. Allowed options include \cr
               \code{"symmetric"} (default) \cr
@@ -25,7 +25,7 @@
               \code{"active"} (only active points are displayed) \cr
               \code{"passive"} (only supplementary points are displayed) \cr
               \code{"none"} (no points are displayed) \cr
-              The status (active or supplementary) of rows and columns is set in \code{\link{ca}} using the options \code{suprow} and \code{supcol}.}
+              The status (active or supplementary) of rows and columns is set in \code{\link{mjca}} using the options \code{suprow} and \code{supcol}.}
   \item{mass}{Vector of two logicals specifying if the mass should be represented by the area of the point symbols (first entry for rows, second one for columns)}
   \item{contrib}{Vector of two character strings specifying if contributions (relative or absolute) should be represented by different colour intensities. Available options are\cr
                  \code{"none"} (contributions are not indicated in the plot).\cr

@@ -2,7 +2,7 @@
 \alias{print.summary.ca}
 \title{Printing summeries of ca objects}
 \description{Printing method for summeries of correspondence analysis objects}
-\usage{print.summary.ca(x, ...) }
+\usage{\method{print}{summary.ca}(x, ...) }
 \arguments{
   \item{x}{Summary of a simple correspondence analysis object returned by \code{\link{summary.ca}}}
   \item{...}{Further arguments are ignored}

@@ -27,8 +27,10 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
   K   <- obj$nd.max
   I   <- length(obj$rownames) # dim(obj$rowcoord)[1] 
   J   <- dim(obj$colcoord)[1]
-  evF <- matrix(rep(sqrt(obj$sv[1:K]), I), I, K, byrow = TRUE)
-  evG <- matrix(rep(sqrt(obj$sv[1:K]), J), J, K, byrow = TRUE)
+ # evF <- matrix(rep(sqrt(obj$sv[1:K]), I), I, K, byrow = TRUE)
+ # evG <- matrix(rep(sqrt(obj$sv[1:K]), J), J, K, byrow = TRUE)
+  evF <- matrix(rep(obj$sv[1:K], I), I, K, byrow = TRUE)
+  evG <- matrix(rep(obj$sv[1:K], J), J, K, byrow = TRUE)
   rpc <- obj$rowcoord[,1:K] * evF
   cpc <- obj$colcoord[,1:K] * evG
  # row profiles:
@@ -130,19 +132,20 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
    # if (obj$lambda=="indicator"){
    #   values     <- obj$sv^2
    #   } else {
-      values     <- obj$sv
+      values     <- obj$sv^2
    #   }
     values2    <- round(100*values/sum(values), 1)
     scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, round(cumsum(100*values/sum(values)), 1))
    # sev.0      <- round(100*sum(values/sum(values)), 1)
     if (obj$lambda == "adjusted"){
-      values     <- round(obj$sv, 6)
+      values     <- round(obj$sv^2, 6)
       values2    <- round(100*obj$inertia.e, 1)
-      values3    <- rep(NA, length(values))
+     # values3    <- rep(NA, length(values))
+      values3    <- round(cumsum(100*obj$inertia.e), 1)
       scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, values3)
       }
     if (obj$lambda == "JCA"){
-      values     <- round(obj$sv, 6)
+      values     <- round(obj$sv^2, 6)
       values2    <- rep(NA, length(values))
       values3    <- rep(NA, length(values))
       scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, values3)

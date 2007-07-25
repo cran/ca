@@ -22,7 +22,8 @@ print.mjca <- function(x, ...)
 
  # Eigenvalues:
   Dimension  <- 1:length(obj$sv)
-  Value      <- round(obj$sv, 6)
+ # Value      <- round(obj$sv, 6)
+  Value      <- round(obj$sv^2, 6)
  # Percentage <- paste(as.character(round(100 * Value / sum(Value), 2)), "%", sep = "")
   Percentage <- paste(as.character(round(100*obj$inertia.e, 2)), "%", sep = "")
 

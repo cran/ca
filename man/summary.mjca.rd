@@ -2,7 +2,7 @@
 \alias{summary.mjca}
 \title{Summarizing multiple and joint correspondence analysis}
 \description{Textual output summarizing the results of \code{\link{mjca}}, including a scree-plot of the principal inertias and row and column contributions.}
-\usage{summary.mjca(object, scree = TRUE, rows = FALSE, ...)}
+\usage{\method{summary}{mjca}(object, scree = TRUE, rows = FALSE, ...)}
 \arguments{
   \item{object}{Multiple or joint correspondence analysis object returned by \code{\link{mjca}}.}
   \item{scree}{Logical flag specifying if a scree-plot should be included in the output.}

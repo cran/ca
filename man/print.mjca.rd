@@ -2,7 +2,7 @@
 \alias{print.mjca}
 \title{Printing mjca objects}
 \description{Printing method for multiple and joint correspondence analysis objects}
-\usage{print.mjca(x, ...) }
+\usage{\method{print}{mjca}(x, ...) }
 \arguments{
   \item{x}{Multiple or joint correspondence analysis object returned by \code{\link{mjca}}}
   \item{...}{Further arguments are ignored}

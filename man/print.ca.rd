@@ -2,7 +2,7 @@
 \alias{print.ca}
 \title{Printing ca objects}
 \description{Printing method for correspondence analysis objects}
-\usage{print.ca(x, ...) }
+\usage{\method{print}{ca}(x, ...) }
 \arguments{
   \item{x}{Simple correspondence analysis object returned by \code{\link{ca}}}
   \item{...}{Further arguments are ignored}

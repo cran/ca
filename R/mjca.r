@@ -19,9 +19,9 @@ subinr <- function(B, ind) {
   }
 ################################################################################
 
-  if(!is.data.frame(obj)){
+#  if(!is.data.frame(obj)){
     obj <- data.frame(lapply(data.frame(obj), as.factor)) 
-    }
+#    }
   I        <- dim(obj)[1]
 
 # supplementary columns (variables)
@@ -88,6 +88,7 @@ subinr <- function(B, ind) {
   rowmass    <- rep(1/I, I)
   dec        <- svd(S)
   lambda0    <- dec$d[1:nd.max]^2
+ ## lambda0    <- dec$d[1:nd.max]
   rowcoord   <- as.matrix(dec$u[,1:nd.max]) / sqrt(rm)
   colcoord   <- as.matrix(dec$v[,1:nd.max]) / sqrt(cm)
   colinertia <- apply(S^2, 2, sum)
@@ -125,6 +126,7 @@ subinr <- function(B, ind) {
     eP         <- cm %*% t(cm)
     S          <- (P - eP) / sqrt(eP)
     dec        <- eigen(S)
+   # lambda0    <- (dec$values[1:nd.max])
     lambda0    <- (dec$values[1:nd.max])^2
     colcoord   <- as.matrix(dec$vectors[,1:nd.max]) / sqrt(cm)
    # MATCH THE SIGNS FROM INDICATOR ANALYSIS (FOR ROWS)
@@ -166,6 +168,7 @@ subinr <- function(B, ind) {
         S          <- (P - eP) / sqrt(eP)
         dec        <- eigen(S)
         lambda0    <- (dec$values[1:nd.max])^2
+       ## lambda0    <- (dec$values[1:nd.max])
         colcoord   <- as.matrix(dec$vectors[,1:nd.max]) / sqrt(cm)
         rowcoord   <- rowcoord[,1:nd.max]
         colinertia <- apply(S^2, 2, sum)
@@ -189,7 +192,7 @@ subinr <- function(B, ind) {
       }
     }# end !indicator
 
-  mjca.output <- list(sv         = lambda0, 
+  mjca.output <- list(sv         = sqrt(lambda0), 
                       lambda     = lambda,
                       inertia.e  = lambda.e,
                       inertia.t  = lambda.t,
