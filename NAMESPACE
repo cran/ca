@@ -1,0 +1,11 @@
+export(ca, iterate.mjca, mjca, pchlist, plot3d.ca)
+import(rgl)
+
+S3method(plot, ca)
+S3method(plot, mjca)
+S3method(print, ca)
+S3method(print, mjca)
+S3method(print, summary.ca)
+S3method(print, summary.mjca)
+S3method(summary, ca)
+S3method(summary, mjca)
