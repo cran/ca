@@ -2,7 +2,7 @@
 \alias{summary.ca}
 \title{Summarizing simple correspondence analysis}
 \description{Textual output summarizing the results of \code{\link{ca}}, including a scree-plot of the principal inertias and row and column contributions.}
-\usage{summary.ca(object, scree = TRUE, ...)}
+\usage{\method{summary}{ca}(object, scree = TRUE, ...)}
 \arguments{
   \item{object}{Simple correspondence analysis object returned by \code{\link{ca}}.}
   \item{scree}{Logical flag specifying if a scree-plot should be included in the output.}

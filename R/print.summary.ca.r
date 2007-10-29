@@ -98,7 +98,9 @@ print.summary.ca <- function(x, ...){
     cat("Principal inertias (eigenvalues):\n\n")
     scree.out <- as.matrix(scree.out)
     dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
-    print(as.matrix(scree.out), quote = FALSE)
+   # colnames(scree.out) <- rep(1, dim(scree.out)[1])
+   # print(as.matrix(scree.out), quote = FALSE)
+    print(scree.out, quote = FALSE)
     cat("\n")
     }
 

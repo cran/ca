@@ -2,7 +2,7 @@
 \alias{plot.ca}
 \title{Plotting 2D maps in correspondence analysis}
 \description{Graphical display of correspondence analysis results in two dimensions}
-\usage{plot.ca(x, dim = c(1,2), map = "symmetric", what = c("all", "all"), 
+\usage{\method{plot}{ca}(x, dim = c(1,2), map = "symmetric", what = c("all", "all"), 
                mass = c(FALSE, FALSE), contrib = c("none", "none"), 
                col = c("#000000", "#FF0000"), pch = c(16, 1, 17, 24), 
                labels = c(2, 2), arrows = c(FALSE, FALSE), ...) }
