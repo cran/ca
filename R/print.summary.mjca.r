@@ -94,7 +94,7 @@ print.summary.mjca <- function(x, ...){
     scree.out <- data.frame(Dim   = c(Dim, "", "Total:"), 
                             Value = c(gluezero(as.character(Value)), "--------", 
                                       gluezero(as.character(valuesum), 8, 2)), 
-                            EV    = c(EV, "-----", ifelse(!is.na(sev), gluezero(sev,5,4), sev)), 
+                            EV    = c(EV, "-----", ifelse(!is.na(sev), gluezero(sev,5,4), "")), 
                             CUMEV = c(CUMEV, "", ""), 
                             scree = c(scree, "", ""))
 
@@ -102,7 +102,9 @@ print.summary.mjca <- function(x, ...){
     if (is.na(object$JCA.nit[1])){
       cat("Principal inertias (eigenvalues):\n\n")
       scree.out <- as.matrix(scree.out)
-      dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
+     # fix for rownames showing up in scree-plot
+     # dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
+      rownames(scree.out) <- rep("", nrow(scree.out))
       print(as.matrix(scree.out), quote = FALSE)
       cat("\n")
       } else {
@@ -150,7 +152,6 @@ print.summary.mjca <- function(x, ...){
   c.nn <- c(c.nn, "")
   colnames(c.new) <- c.nn
   rownames(c.new) <- 1:n1
-
 
  # cat("\nRows:\n")
  # print(as.matrix(r.new), quote = FALSE, right = TRUE)

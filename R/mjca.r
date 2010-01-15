@@ -1,31 +1,85 @@
-mjca <- function(obj, nd = 2, lambda = "adjusted", supcol = NA, maxit = 50, epsilon = 0.0001) {
+mjca <- function(obj, nd = 2, lambda = "adjusted", supcol = NA, subsetcol = NA, ps = "", maxit = 50, epsilon = 0.0001) {
 
-################################################################################
-subinr <- function(B, ind) {
-  nn   <- length(ind)
-  subi <- matrix(NA, nrow = nn, ncol = nn)
-  ind2 <- c(0,cumsum(ind))
-  for (i in 1:nn) {
-    for (j in 1:nn) {
-      tempmat   <- B[(ind2[i]+1):(ind2[i+1]), (ind2[j]+1):(ind2[j+1])]
-      tempmat   <- tempmat / sum(tempmat)
-      er        <- apply(tempmat, 1, sum)
-      ec        <- apply(tempmat, 2, sum)
-      ex        <- er%*%t(ec)
-      subi[i,j] <- sum((tempmat - ex)^2 / ex)
+ ### SOME CHECKS:
+ ## subsets only for Burt-case:
+  if ((!(length(unlist(subsetcol)) == 1 & is.na(unlist(subsetcol)[1]))) & lambda != "Burt"){
+    lambda <- "Burt"
+    warning("Subset analysis is only supported for lambda=\"Burt\" \n lambda is set to \"Burt\"")
+    }
+ ## valid argument for 'lambda'
+  lam.v0 <- c("indicator", "Burt", "adjusted", "JCA")
+  lam.v1 <- c("i", "B", "a", "J")
+ # is lambda in lam.v0?
+  if (length(grep(tolower(lambda), tolower(lam.v0), fixed = TRUE)) != 0){
+    lambda <- lam.v0[grep(tolower(lambda), tolower(lam.v0), fixed = TRUE)[1]]
+    } else {
+   # only first letter specified?
+    if (length(grep(tolower(lambda), lam.v1)) == 1){
+      lambda <- lam.v0[grep(tolower(lambda), lam.v1)]
+      } else {
+     # "fuzzy matching" unique?
+      if (length(agrep(tolower(lambda), tolower(lam.v0))) == 1 ) {
+        lambda <- lam.v0[agrep(tolower(lambda), tolower(lam.v0))]
+        } else {
+        stop(paste("\nInvalid 'lambda' specification. Valid values are:\n", 
+             paste("\"", lam.v0, "\" ", c(",", ",", "and ", "."), sep = "", collapse = ""), 
+                   collapse = "", sep = ""))
+        }
       }
     }
-  subi / nn^2
-  }
-################################################################################
+
 
 #  if(!is.data.frame(obj)){
     obj <- data.frame(lapply(data.frame(obj), as.factor)) 
 #    }
   I        <- dim(obj)[1]
+  cases    <- dim(obj)[2]
+  supcol0  <- supcol
+
+# Subset check:
+  subsetcol.in <- NA
+  if (!(is.na(subsetcol)[1] & length(subsetcol) == 1)){
+   # check if given as vector
+    if (mode(subsetcol) != "list"){
+### bcn, 2009_11: negative indexes:
+      foo01 <- unlist(lapply(obj, nlevels))
+      if (sum(subsetcol < 0) == length(subsetcol)){
+        subsetcol <- (1:sum(foo01))[subsetcol]
+        }
+      lut  <- cumsum(foo01) - unlist(foo01)
+      s0   <- (1:sum(foo01))[subsetcol]
+### bcn, 2009_11: ??? not neccessary below:
+    #  s0 <- list()
+    #  for (i in 2:length(obj)){
+    #    foo00     <- subsetcol[subsetcol > lut[i-1] & subsetcol <= lut[i]] - lut[i-1]
+    #    if (length(foo00) > 0) { 
+    #      s0[[i-1]] <- foo00 
+    #      } else {
+    #      s0[[i-1]] <-NA
+    #      }
+    #    }
+      } # end subset-vector
+
+    if (mode(subsetcol) == "list"){
+      s0 <- list()
+      if (length(subsetcol) < length(obj)){
+        for (i in (length(subsetcol)+1):length(obj)){
+          subsetcol[[i]] <- NA
+          }
+        }
+      for (i in 1:length(obj)){
+        if (is.na(subsetcol[[i]])[1]){
+          s0[[i]] <- NA
+          } else {
+          s0[[i]] <- (1:nlevels(obj[[i]]))[subsetcol[[i]]]
+          }
+        }
+      } 
+    subsetcol <- s0
+    } 
 
 # supplementary columns (variables)
-  if (!is.na(supcol[1])){
+  if (!is.na(supcol)[1]){
     obj.supcol   <- data.frame(obj[,supcol])
     colnames(obj.supcol) <- colnames(obj)[supcol]
     obj          <- data.frame(obj[,-supcol])
@@ -42,15 +96,35 @@ subinr <- function(B, ind) {
     fn.star      <- rep(names(obj.supcol), unlist(lapply(obj.supcol, nlevels)))
     ln.star      <- unlist(lapply(obj.supcol,levels))
     cn.star      <- dimnames(obj.supcol)[2]
+   # check: subset and sup?
+    if (!(is.na(subsetcol)[1] & length(subsetcol) == 1)){
+      for (i in sort(supcol0, decr = TRUE)){
+        subsetcol <- subsetcol[-i]
+        }
+      }
     }
 
- # prepare data
   levels.n <- unlist(lapply(obj, nlevels))
-  n        <- cumsum(levels.n)
-  Q        <- dim(obj)[2]
   rn       <- dimnames(obj)[[1]]
   cn       <- dimnames(obj)[[2]]
 
+
+ # prepare data
+  n        <- cumsum(levels.n)
+  Q        <- dim(obj)[2]
+ # get column indexes for subsets:
+### BCN 2009_11: ??? below:
+ # if (!(is.na(subsetcol)[1] & length(subsetcol) == 1)){
+ #   subsetcol.in <- numeric(0)
+ #   lut  <- cumsum(unlist(lapply(obj, nlevels))) - unlist(lapply(obj, nlevels))
+ #   for (i in 1:length(subsetcol)){
+ #     if (!is.na(subsetcol[[i]][1])){
+ #       subsetcol.in <- c(subsetcol.in, subsetcol[[i]] + lut[i])
+ #       }
+ #     }
+ #   }
+  subsetcol.in <- subsetcol
+  
  # indicator and burt matrix:
   Z        <- matrix(0, nrow = I, ncol = n[length(n)])
   newdat   <- lapply(obj, as.numeric)
@@ -62,7 +136,7 @@ subinr <- function(B, ind) {
   B        <- t(Z)%*%Z
   J        <- dim(B)[1]
 
-  col.names        <- paste(fn, ln, sep = ".")
+  col.names        <- paste(fn, ln, sep = ps)
   dimnames(Z)[[2]] <- col.names
   dimnames(Z)[[1]] <- as.character(1:I)
   dimnames(B)[[2]] <- col.names
@@ -98,6 +172,9 @@ subinr <- function(B, ind) {
   lambda.et  <- 1
  # SIGNS FROM SVD AND EV ARE NOT THE SAME, ADJUSTMENT BELOW:
   coord.sign <- sign(colcoord[1,])
+ # temporary fix
+  colinertia.Burt <- NA
+  lambda.Burt     <- NA
  # SUPPLEMENTARY COLUMNS FOR INDICATOR BELOW:
   if (!is.na(supcol[1])){
     cs.star       <- apply(Z.star, 2, sum)
@@ -110,7 +187,12 @@ subinr <- function(B, ind) {
     cm            <- c(cm, rep(NA, J.star))
     cn            <- c(cn, dimnames(obj.supcol)[[2]])
     col.names.sup <- paste(fn.star, ln.star, sep = ".")
-    col.names     <- c(col.names, col.names.sup)
+    if ((is.na(subsetcol)[1] & length(subsetcol) == 1)){
+      col.names     <- c(col.names, col.names.sup)
+      } else {
+      col.names     <- c(col.names[subsetcol.in], col.names.sup)
+      supcol <- supcol - (J - sum(!is.na(unlist(subsetcol))))
+      }
    # Burt thingie for suppl
     B.star2       <- t(Z)%*%Z.star
     }
@@ -119,12 +201,28 @@ subinr <- function(B, ind) {
   if (lambda != "indicator"){
    # BURT, ADJUSTED AND JCA BELOW:
     nd.max     <- min(J-Q, I-1)
-    if (is.na(nd) | nd > nd.max)
-      nd <- nd.max
-    P          <- B/sum(B)
+
     cm         <- apply(P, 2, sum)
+    P          <- B/sum(B)
     eP         <- cm %*% t(cm)
     S          <- (P - eP) / sqrt(eP)
+### bcn, 2009_11:
+   ##### PLACEHOLDER FOR SUBSET ! 
+    if (!(is.na(subsetcol)[1] & length(subsetcol) == 1)){
+      B         <- B[subsetcol.in,subsetcol.in]
+      S         <- S[subsetcol.in,subsetcol.in]
+      nd.max    <- dim(B)[1]
+     # col.names <- col.names[subsetcol.in]
+      cm        <- cm[subsetcol.in]
+     # Z.star    <- Z.star[,subsetcol.in]
+     # Z         <- Z[,subsetcol.in]
+     # B.star2   <- t(Z)%*%Z.star
+     # nd.max    <- min(length(subsetcol), I-1)
+      }
+   ##### EO PLACEHOLDER, SUBSET.
+    if (is.na(nd) | nd > nd.max)
+      nd <- nd.max
+
     dec        <- eigen(S)
    # lambda0    <- (dec$values[1:nd.max])
     lambda0    <- (dec$values[1:nd.max])^2
@@ -135,6 +233,8 @@ subinr <- function(B, ind) {
     col.tr[coord.sign[1:nd.max] != c.sign] <- -1
     rowcoord   <- rowcoord[,1:nd.max]%*%diag(col.tr)
     colinertia <- apply(S^2, 2, sum)
+      colinertia.Burt <- colinertia  # temporary fix for COR/CTR in adjusted case
+      lambda.Burt     <- lambda0     #  " "
     coldist    <- sqrt(colinertia / cm)
     lambda.t   <- sum(lambda0)
     lambda.e   <- lambda0 / lambda.t
@@ -149,7 +249,7 @@ subinr <- function(B, ind) {
       lambda.e    <- lambda.adj / lambda.t
       lambda.et   <- NA
       lambda0     <- lambda.adj
-      colinertia  <- (Q/(Q-1)) * (colinertia - (1/Q)*((1/Q)-cm))
+      colinertia  <- (Q/(Q-1))^2 * (colinertia - (1/Q)*((1/Q)-cm))
       colcoord    <- as.matrix(dec$vectors[,1:nd.max]) / sqrt(cm)
       rowcoord    <- rowcoord[,1:nd.max]
       } else {
@@ -180,6 +280,12 @@ subinr <- function(B, ind) {
       }# end else
    # SUPPLEMENTARY CATEGORIES FOR BURT CASES:
     if (!is.na(supcol[1])){
+      if (!(is.na(subsetcol)[1] & length(subsetcol) == 1)) {
+        B.star2 <- B.star2[subsetcol.in,]
+       # adjust supplementary indexes:
+        } # else {
+     #   B.star22 <- B.star2
+     #   }
       rs.star      <- apply(B.star2, 2, sum)
       P.star       <- B.star2%*%diag(1/rs.star)
       cm           <- c(cm, apply(B.star2/sum(Z), 2, sum))
@@ -213,10 +319,14 @@ subinr <- function(B, ind) {
                       colinertia = colinertia, 
                       colcoord   = colcoord, 
                       colsup     = supcol,
+                      subsetcol  = subsetcol.in,
                       Burt       = B,
                       Burt.upd   = B.star,
                       subinertia = subin,
                       JCA.iter   = JCA.it,
+                     # bcn 09
+                     # temp0      = colinertia.Burt, # temporary fix for COR/CTR in adjusted case
+                     # temp1      = sqrt(lambda.Burt),     #  " "
                       call       = match.call())
   class(mjca.output) <- "mjca"
   return(mjca.output)

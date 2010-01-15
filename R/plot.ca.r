@@ -32,7 +32,7 @@ plot.ca <- function(x,
                     what    = c("all", "all"), 
                     mass    = c(FALSE, FALSE), 
                     contrib = c("none", "none"), 
-                    col     = c("#000000", "#FF0000"), 
+                    col     = c("#0000FF", "#FF0000"), 
                     pch     = c(16, 1, 17, 24), 
                     labels  = c(2,2), 
                     arrows  = c(FALSE, FALSE), 
@@ -60,6 +60,15 @@ plot.ca <- function(x,
       }
     }
 
+ # sign switching:
+  if (min(dim) < 0){
+    swisign <- ifelse(dim < 0, -1, 1)
+    dim.c  <- dim(obj$rowcoord)[2]
+    signmat <- diag(rep(swisign, length = dim.c))
+    obj$rowcoord <- obj$rowcoord%*%signmat
+    obj$colcoord <- obj$colcoord%*%signmat
+    dim <- abs(dim)
+    }
  # principal coordinates:
   K      <- dim(obj$rowcoord)[2]
   I      <- dim(obj$rowcoord)[1] ; J <- dim(obj$colcoord)[1]
@@ -222,12 +231,12 @@ plot.ca <- function(x,
   pty.backup <- par()$pty
 
  # plot:
-  # par(pty = "s") # replaces by asp=1 below
+  # par(pty = "s") # replaced by asp=1 below
   plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = "", ylab = "", type = "n", axes = FALSE, asp = 1, ...)
   box()
   abline(h = 0, v = 0, lty = 3)
-  axis(1, col = col[1])
-  axis(2, col = col[1])
+  axis(1) #, col = col[1])
+  axis(2) #, col = col[1])
 
  # rows
   if (!is.na(x[1]) & labels[1] != 1) {

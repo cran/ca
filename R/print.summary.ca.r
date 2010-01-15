@@ -97,9 +97,11 @@ print.summary.ca <- function(x, ...){
     colnames(scree.out) <- c("dim", "value", "  %", "cum%", " scree plot")
     cat("Principal inertias (eigenvalues):\n\n")
     scree.out <- as.matrix(scree.out)
-    dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
    # colnames(scree.out) <- rep(1, dim(scree.out)[1])
    # print(as.matrix(scree.out), quote = FALSE)
+   # fix for rownames showing up in scree-plot
+   # dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
+    rownames(scree.out) <- rep("", nrow(scree.out))
     print(scree.out, quote = FALSE)
     cat("\n")
     }
@@ -136,7 +138,6 @@ print.summary.ca <- function(x, ...){
   c.nn <- c(c.nn, "")
   colnames(c.new) <- c.nn
   rownames(c.new) <- 1:n1
-
 
   cat("\nRows:\n")
   print(as.matrix(r.new), quote = FALSE, right = TRUE)

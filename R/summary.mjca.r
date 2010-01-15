@@ -21,6 +21,16 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
     } else {
     if (nd > length(obj$sv)) nd <- length(obj$sv)
     }
+ # bcn 09
+ # if (obj$lambda=="adjusted"){
+ #   obj.colinertia <- obj$temp0
+ #   obj.sv         <- obj$temp1
+ #   } else {
+ #   obj.colinertia <- obj$colinertia
+ #   obj.sv         <- obj$sv
+ #   }
+ # obj.colinertia <- ifelse(obj$lambda=="adjusted", obj$temp0, obj$colinertia)
+ # obj.sv         <- ifelse(obj$lambda=="adjusted", obj$temp1, obj$sv)
 
  # principal coordinates:
  # K   <- dim(obj$rowcoord)[2]
@@ -46,6 +56,7 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
                                obj$rowinertia
     r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
                                obj$sv[i]
+#                               obj$sv[i]
     if (obj$lambda == "indicator"){
       r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
                                  sqrt(obj$sv[i])
@@ -71,36 +82,50 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
                           c("name", "mass", " qlt", " inr", rcclab))
 
  # column profiles:
-  getfirst <- function(input) input[1]
-  getlast  <- function(input) input[length(input)]
-  c.part1  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getfirst))
-  c.part2  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getlast))
-  c.names  <- paste(abbreviate(c.part1, 3), c.part2, sep = ".") 
+ # bcn09
+ # getfirst <- function(input) input[1]
+ # getlast  <- function(input) input[length(input)]
+ # bcn09 
+ # c.part1  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getfirst))
+ # c.part2  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getlast))
+ # c.names  <- paste(abbreviate(c.part1, 3), c.part2, sep = ".") 
+### bcn 2009_11:
+ # c.names <- obj$levelnames
+  if (!is.na(obj$subsetcol[1])){
+    c.names  <- obj$levelnames[obj$subsetcol]
+    } else {
+    c.names  <- obj$levelnames    
+    }
   sc       <- obj$colsup
   if (!is.na(sc[1])) c.names[sc] <- paste("(*)", c.names[sc], sep = "")
   c.mass   <- obj$colmass
-  c.inr    <- obj$colinertia / sum(obj$colinertia, na.rm = TRUE)
+  c.inr    <- obj$colinertia  / sum(obj$colinertia, na.rm = TRUE)
   c.ccc    <- matrix(NA, nrow = length(c.names), ncol = nd * 3)
   for (i in 1:nd){
     c.ccc[,3 * (i - 1) + 1] <- cpc[,i]
     c.ccc[,3 * (i - 1) + 2] <- obj$colmass * cpc[,i]^2 /
                                obj$colinertia
+   # c.ccc[,3 * (i - 1) + 2] <- cpc[,i]^2 / obj$coldist^2
     c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 / 
                                obj$sv[i]
+#                               obj$sv[i]
     if (obj$lambda == "indicator"){
       c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 / 
                                  sqrt(obj$sv[i])
       }
     }
-  if (obj$lambda == "adjusted"){
-    temp.pc  <- obj$colcoord[,1:length(obj$sv)] %*% diag(sqrt(obj$sv))
-    temp.rcc <- diag(obj$colmass)%*%temp.pc^2
-    cpc.new  <- diag(1/obj$colinertia)%*%temp.rcc
-    c.ccc[,3 * ((1:nd) - 1) + 2] <- cpc.new[,1:nd]
-    }
+ # bcn 09
+ # if (obj$lambda == "adjusted"){
+ #   temp.pc  <- obj$colcoord[,1:length(obj$sv)] %*% diag(sqrt(obj$sv))
+ #   temp.rcc <- diag(obj$colmass)%*%temp.pc^2
+ #   cpc.new  <- diag(1/obj$colinertia)%*%temp.rcc
+ #   c.ccc[,3 * ((1:nd) - 1) + 2] <- cpc.new[,1:nd]
+ #   }
  # cor and quality for supplementary columns
   if (!is.na(obj$colsup[1])){
     i0 <- obj$colsup
+    c.mass[i0] <- NA
+    c.inr[i0]  <- NA
     for (i in 1:nd){
       c.ccc[i0,3 * (i - 1) + 2] <- obj$colmass[i0] * cpc[i0,i]^2 / obj$colinertia[i0]
       c.ccc[i0,3 * (i - 1) + 3] <- NA
