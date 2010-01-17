@@ -22,10 +22,11 @@ ca <- function(obj,
                subsetcol = NA)
 {
   nd0 <- nd
-  I  <- dim(obj)[1] ; J <- dim(obj)[2]
-  rn <- dimnames(obj)[[1]]
-  cn <- dimnames(obj)[[2]]
-  N  <- matrix(as.matrix(obj), nrow = I, ncol = J)
+  I   <- dim(obj)[1] ; J <- dim(obj)[2]
+  rn  <- dimnames(obj)[[1]]
+  cn  <- dimnames(obj)[[2]]
+  N   <- matrix(as.matrix(obj), nrow = I, ncol = J)
+
 
  # Temporary remove supplementray rows/columns:
   Ntemp <- N ; NtempC <- NtempR <- N
@@ -37,12 +38,14 @@ ca <- function(obj,
     NtempR <- Ntemp[,-supcol] 
     }
   if (!is.na(supcol[1])) { 
-    SC <- as.matrix(NtempC[,supcol])
-    Ntemp <- Ntemp[,-supcol]
-   }
+    SC     <- as.matrix(NtempC[,supcol])
+    Ntemp  <- Ntemp[,-supcol]
+    cs.sum <- apply(SC, 2, sum)
+    }
   if (!is.na(suprow[1])) {
-    SR <- matrix(as.matrix(NtempR[suprow,]), nrow = length(suprow))
-    Ntemp <- Ntemp[-suprow,]
+    SR     <- matrix(as.matrix(NtempR[suprow,]), nrow = length(suprow))
+    Ntemp  <- Ntemp[-suprow,]
+    rs.sum <- apply(SR, 1, sum)
     }
   N <- matrix(as.matrix(Ntemp), nrow = dim(Ntemp)[1], ncol = dim(Ntemp)[2])
 
@@ -80,21 +83,42 @@ ca <- function(obj,
  # check for subset CA
   dim.N <- dim(N)
   if (!is.na(subsetrow[1])) {
-    dim.N[1] <- min(c(length(subsetrow), dim.N[1]))
+   # dim.N[1] <- min(c(length(subsetrow), dim.N[1]))
    # dim.N <- dim(N) + 1
     if (!is.na(supcol[1])) SC <- as.matrix(SC[subsetrow,])
     }
   if (!is.na(subsetcol[1])) {
-    dim.N[2] <- min(c(length(subsetcol), dim.N[2]))
+   # dim.N[2] <- min(c(length(subsetcol), dim.N[2]))
    # dim.N <- dim(N) + 1
     if (!is.na(suprow[1])) SR <- matrix(as.matrix(SR[,subsetcol]), nrow = length(suprow))
     }
  # end subset CA
-  if (!is.na(subsetrow[1]) | !is.na(subsetcol[1])) {
-     nd.max <- min(dim.N)
-     } else {
-       nd.max <- min(dim.N) - 1
-       }
+
+ # if (!is.na(subsetrow[1]) | !is.na(subsetcol[1])) {
+ #    nd.max <- min(dim.N)
+ #    } else {
+ #      nd.max <- min(dim.N) - 1
+ #      }
+ # check for maximum dimensionality
+ # "standard" case (no subset):
+  if (is.na(subsetrow[1]) & is.na(subsetcol[1])) {
+    nd.max <- min(dim.N) - 1
+    } else { # subset-case below:
+    N00 <- N
+    if (!is.na(subsetrow[1])) N00 <- N00[subsetrow,]
+    if (!is.na(subsetcol[1])) N00 <- N00[,subsetcol]
+    dim.N  <- dim(N00)
+    nd.max <- min(dim.N)
+    if (!is.na(subsetrow[1]) & is.na(subsetcol[1])){
+      if (dim.N[1] > dim.N[2]) nd.max <- min(dim.N) - 1
+      } else {
+      if (is.na(subsetrow[1]) & !is.na(subsetcol[1])){
+        if (dim.N[2] > dim.N[1]){ 
+          nd.max <- min(dim.N) - 1
+          } 
+        }
+      }
+    }
   if (is.na(nd) | nd > nd.max ) nd <- nd.max
 
  # Init:
@@ -172,44 +196,60 @@ ca <- function(obj,
 
  # Standard coordinates for supplementary rows/columns
   if (!is.na(suprow[1])) {
-    rs             <- apply(SR, 1, sum)
-    base2          <- SR / matrix(rep(rs, dim(gam)[1]), ncol = dim(gam)[1])
-    svphi          <- matrix(sv[1:nd], nrow = length(suprow), ncol = nd, 
-                             byrow = TRUE)
-    phi2           <- (as.matrix(base2) %*% gam) / svphi
+    cs             <- cm
+    gam.00         <- gam
+    base2          <- SR / matrix(rs.sum, nrow = nrow(SR), ncol = ncol(SR)) # , byrow=TRUE)
+    base2 <- t(base2)
+    cs.0           <- matrix(cs, nrow = nrow(base2), ncol = ncol(base2)) #, byrow = TRUE)
+    svphi          <- matrix(sv[1:nd], nrow = length(suprow), ncol = nd, byrow = T) #, 
+                            # byrow = TRUE)
+    base2          <- base2 - cs.0
+    phi2           <- (t(as.matrix(base2)) %*% gam.00) / svphi
     phi3           <- matrix(NA, ncol = nd, nrow = I)
     phi3[suprow,]  <- phi2
     phi3[-suprow,] <- phi
     rm0            <- rep(NA, I)
     rm0[-suprow]   <- rm
-    rm             <- rm0
-    P.star        <- SR / n
-    rm[suprow]    <- apply(P.star, 1, sum)
+    P.star         <- SR / n
+    rm0[suprow]    <- NA # apply(P.star, 1, sum)
     rin0           <- rep(NA, I)
     rin0[-suprow]  <- rin
     rin            <- rin0
     }
   if (!is.na(supcol[1])) {
-    cs             <- apply(SC, 2, sum)
-    base2          <- SC / matrix(rep(cs, dim(phi)[1]), nrow = dim(phi)[1], 
+    rs             <- rm
+    phi.00         <- phi
+    base2          <- SC / matrix(cs.sum, nrow = nrow(SC), ncol = ncol(SC), 
                                   byrow = TRUE)
+    rs.0           <- matrix(rs, nrow = nrow(base2), ncol = ncol(base2))
     svgam          <- matrix(sv[1:nd], nrow = length(supcol), ncol = nd, 
                              byrow = TRUE)
-    gam2           <- (as.matrix(t(base2)) %*% phi) / svgam
+    base2          <- base2 - rs.0
+    gam2           <- (as.matrix(t(base2)) %*% phi.00) / svgam
     gam3           <- matrix(NA, ncol = nd, nrow = J)
     gam3[supcol,]  <- gam2
     gam3[-supcol,] <- gam
     cm0            <- rep(NA, J)
     cm0[-supcol]   <- cm
-    cm             <- cm0
-    P.star        <- SC / n
-    cm[supcol]    <- apply(P.star, 2, sum)
+    P.star         <- SC / n
+    cm0[supcol]    <- NA # apply(P.star, 2, sum)
     cin0           <- rep(NA, J)
     cin0[-supcol]  <- cin
     cin            <- cin0
     }
   if (exists("phi3")) phi <- phi3
   if (exists("gam3")) gam <- gam3
+  if (exists("rm0"))  rm  <- rm0
+  if (exists("cm0"))  cm  <- cm0
+
+### bcn 2009_11: sign switching is now within plot.ca
+ # sign switching:
+ # if (!is.na(swisign)[1]){
+ #   dim.c  <- dim(phi)[2]
+ #   signmat <- diag(rep(swisign, length = dim.c))
+ #   phi <- phi%*%signmat
+ #   gam <- gam%*%signmat
+ #   }
 
 ca.output <- 
 list(sv         = sv, 

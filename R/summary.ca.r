@@ -1,6 +1,6 @@
 ################################################################################
 # 
-# summary.ca: (Generic) function for summarizing 'ca'-objects
+# summary.ca: Summary method for 'ca'-objects
 #
 #      Input: object The 'ca' object which should be summarized
 #             scree  Logical indicating if a scree-plot should be included
@@ -34,27 +34,45 @@ summary.ca <- function(object, scree = TRUE, ...){
   cpc <- obj$colcoord[,1:K] * svG
 
  # rows:
-  r.names <- abbreviate(obj$rownames, 3)
-  sr      <- obj$rowsup
+#  r.names <- abbreviate(obj$rownames, 3)
+# 2009_11:
+  strnascii <- function(x){
+    foo1 <- unlist(strsplit(x, ""))
+    foo2 <- grep('\\w', foo1)
+    foo  <- paste(foo1[foo2], collapse = "")
+    return(foo)
+    }
+  rnames.temp <- unlist(lapply(obj$rownames, strnascii))
+  r.names     <- abbreviate(rnames.temp, 4)
+  sr          <- obj$rowsup
   if (!is.na(sr[1])) r.names[sr] <- paste("(*)", r.names[sr], sep = "")
   r.mass <- obj$rowmass
+ # add bcn09
+  if (length(obj$rowsup)>0){
+    i0 <- obj$rowsup
+    r.mass[i0] <- NA
+    }
   r.inr  <- obj$rowinertia / sum(obj$rowinertia, na.rm = TRUE)
   r.ccc  <- matrix(NA, nrow = length(r.names), ncol = nd * 3)
   for (i in 1:nd){
     r.ccc[,3 * (i - 1) + 1] <- rpc[,i]
-    r.ccc[,3 * (i - 1) + 2] <- obj$rowmass * rpc[,i]^2 / 
-                               obj$rowinertia
+   # bcn09
+   # r.ccc[,3 * (i - 1) + 2] <- obj$rowmass * rpc[,i]^2 / 
+   #                            obj$rowinertia
+    r.ccc[,3 * (i - 1) + 2] <- rpc[,i]^2 / obj$rowdist^2
     r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
                                obj$sv[i]^2
     }
  # cor and quality for supplementary rows
-  if (length(obj$rowsup) > 0){
-    i0 <- obj$rowsup
-    for (i in 1:nd){
-      r.ccc[i0,3 * (i - 1) + 2] <- obj$rowmass[i0] * rpc[i0,i]^2
-      r.ccc[i0,3 * (i - 1) + 3] <- NA
-      }
-    }
+  # bcn 09
+  # if (length(obj$rowsup) > 0){
+  #  i0 <- obj$rowsup
+  #  for (i in 1:nd){
+  #   # bcn09
+  #   # r.ccc[i0,3 * (i - 1) + 2] <- obj$rowmass[i0] * rpc[i0,i]^2
+  #    r.ccc[i0,3 * (i - 1) + 3] <- NA
+  #    }
+  #  }
   if (nd > 1) {
     r.qlt <- apply(r.ccc[,((1:nd-1) * 3 + 2)], 1, sum) } 
     else {
@@ -75,27 +93,37 @@ summary.ca <- function(object, scree = TRUE, ...){
                           c("name", "mass", " qlt", " inr", rcclab))
 
  # columns:
-  c.names <- abbreviate(obj$colnames, 3)
+# 2009_11:
+  cnames.temp <- unlist(lapply(obj$colnames, strnascii))
+  c.names     <- abbreviate(cnames.temp, 4)
   sc      <- obj$colsup
   if (!is.na(sc[1])) c.names[sc] <- paste("(*)", c.names[sc], sep = "")
   c.mass  <- obj$colmass
+ # bcn09:
+  if (length(obj$colsup) > 0){
+    i0 <- obj$colsup
+    c.mass[i0] <- NA
+    }
   c.inr   <- obj$colinertia / sum(obj$colinertia, na.rm = TRUE)
   c.ccc   <- matrix(NA, nrow = length(c.names), ncol = nd * 3)
   for (i in 1:nd)
     {
     c.ccc[,3 * (i - 1) + 1] <- cpc[,i]
-    c.ccc[,3 * (i - 1) + 2] <- obj$colmass * cpc[,i]^2 /
-                               obj$colinertia
+   # bcn 09
+   # c.ccc[,3 * (i - 1) + 2] <- obj$colmass * cpc[,i]^2 /
+   #                            obj$colinertia
+    c.ccc[,3 * (i - 1) + 2] <- cpc[,i]^2 / obj$coldist^2
     c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 / 
                                obj$sv[i]^2
     }
-  if (length(obj$colsup) > 0){
-    i0 <- obj$colsup
-    for (i in 1:nd){
-      c.ccc[i0,3 * (i - 1) + 2] <- obj$colmass[i0] * cpc[i0,i]^2
-      c.ccc[i0,3 * (i - 1) + 3] <- NA
-      }
-    }
+ # bcn 09
+ # if (length(obj$colsup) > 0){
+ #   i0 <- obj$colsup
+ #   for (i in 1:nd){
+ #     c.ccc[i0,3 * (i - 1) + 2] <- obj$colmass[i0] * cpc[i0,i]^2
+ #     c.ccc[i0,3 * (i - 1) + 3] <- NA
+ #     }
+ #   }
   if (nd > 1) { 
     c.qlt <- apply(c.ccc[,((1:nd - 1) * 3 + 2)], 1, sum) } 
     else {

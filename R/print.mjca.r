@@ -50,7 +50,12 @@ print.mjca <- function(x, ...)
     {
     tmpnames[obj$colsup] <- paste(tmpnames[obj$colsup],"(*)",sep="")
     }
-  dimnames(tmp)[[2]] <- tmpnames
+# BCN 2009_11:
+  if (!is.na(obj$subsetcol[1])){
+    dimnames(tmp)[[2]] <- tmpnames[obj$subsetcol]
+    } else {
+    dimnames(tmp)[[2]] <- tmpnames
+    }
   dn <- paste("Dim.", 1:nd)
   dimnames(tmp)[[1]] <- c("Mass", "ChiDist", "Inertia", dn)
   Column.profiles <- tmp
