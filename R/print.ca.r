@@ -28,9 +28,10 @@ print.ca <- function(x, ...)
  # Eigenvalues:
   Dimension <- 1:nd0
   Value <- round(obj$sv^2, 6)
-  Percentage <- paste(as.character(round(100 * Value / sum(Value), 2)), "%", sep = "")
-  
-  tmp <- rbind(Value = as.character(Value), Percentage = as.character(Percentage))
+  Percentage <- paste(as.character(round(100 * Value / sum(Value), 2)), 
+                      "%", sep = "")
+  tmp <- rbind(Value = as.character(Value), 
+               Percentage = as.character(Percentage))
   dimnames(tmp)[[2]] <- Dimension  
   Eigenvalues <- tmp
 

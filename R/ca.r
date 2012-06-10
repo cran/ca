@@ -1,4 +1,3 @@
-
 ################################################################################
 # 
 #     ca:  Computation of Simple CA
@@ -19,8 +18,7 @@ ca <- function(obj,
                suprow    = NA, 
                supcol    = NA,
                subsetrow = NA,
-               subsetcol = NA)
-{
+               subsetcol = NA){
   nd0 <- nd
   I   <- dim(obj)[1] ; J <- dim(obj)[2]
   rn  <- dimnames(obj)[[1]]
@@ -78,7 +76,6 @@ ca <- function(obj,
    # adjust supplementary column indexes:
     for (q in 1:length(supcol)) supcol[q] <- (1:length(subsetcolt))[subsetcolt == supcol[q]]
     }
-
 
  # check for subset CA
   dim.N <- dim(N)
@@ -171,7 +168,9 @@ ca <- function(obj,
   if (!is.na(suprow[1])) {
     if (is.na(supcol[1])) {
       P.stemp <- matrix(as.matrix(obj[suprow,]), nrow = length(suprow))
-      } else P.stemp <- matrix(as.matrix(obj[suprow, -supcol]), nrow = length(suprow))
+      } else{
+      P.stemp <- matrix(as.matrix(obj[suprow, -supcol]), nrow = length(suprow))
+      }
     P.stemp           <- P.stemp / apply(P.stemp, 1, sum)
     P.stemp           <- t((t(P.stemp) - cm) / sqrt(cm))
     rschidist         <- sqrt(apply(P.stemp^2, 1, sum))
@@ -198,10 +197,11 @@ ca <- function(obj,
   if (!is.na(suprow[1])) {
     cs             <- cm
     gam.00         <- gam
-    base2          <- SR / matrix(rs.sum, nrow = nrow(SR), ncol = ncol(SR)) # , byrow=TRUE)
+    base2          <- SR / matrix(rs.sum, nrow = nrow(SR), ncol = ncol(SR))
     base2 <- t(base2)
-    cs.0           <- matrix(cs, nrow = nrow(base2), ncol = ncol(base2)) #, byrow = TRUE)
-    svphi          <- matrix(sv[1:nd], nrow = length(suprow), ncol = nd, byrow = T) #, 
+    cs.0           <- matrix(cs, nrow = nrow(base2), ncol = ncol(base2))
+    svphi          <- matrix(sv[1:nd], nrow = length(suprow), ncol = nd, 
+                             byrow = TRUE) #, 
                             # byrow = TRUE)
     base2          <- base2 - cs.0
     phi2           <- (t(as.matrix(base2)) %*% gam.00) / svphi

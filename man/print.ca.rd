@@ -13,6 +13,6 @@ For supplementary points, masses and inertias are not applicable.
 }
 \seealso{\code{\link{ca}}}
 \examples{
-data(smoke)
+data("smoke")
 print(ca(smoke))
 }

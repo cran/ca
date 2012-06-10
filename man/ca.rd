@@ -32,15 +32,14 @@
   \item{colcoord  }{Column standard coordinates}
   \item{colsup    }{Indices of column supplementary points}
       }
-\references{Nenadic, O. and Greenacre, M. (2007). Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. Journal of Statistical Software, 20 (3), available at \url{http://www.jstatsoft.org/v20/i03/}\cr
-            Greenacre, M. (2007). Correspondence Analysis in Practice. Second Edition. Chapman & Hall / CRC, London.\cr
+\references{Nenadic, O. and Greenacre, M. (2007). Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. \emph{Journal of Statistical Software}, \bold{20 (3)}, \url{http://www.jstatsoft.org/v20/i03/}\cr
+            Greenacre, M. (2007). \emph{Correspondence Analysis in Practice}. Second Edition. London: Chapman & Hall / CRC.\cr
             Blasius, J. and Greenacre, M. J. (1994), Computation of correspondence analysis, 
-            in ``Correspondence Analysis in the Social Sciences'', pp. 53-75, Academic Press, 
-            London.\cr
-            Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. Sociological Methods and Research, 35, pp. 193-218.}
+            in \emph{Correspondence Analysis in the Social Sciences}, pp. 53-75, London: Academic Press.\cr
+            Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. \emph{Sociological Methods and Research}, \bold{35}, pp. 193-218.}
 \seealso{\code{\link{svd}}, \code{\link{plot.ca}}, \code{\link{plot3d.ca}}, \code{\link{summary.ca}}, \code{\link{print.ca}} }
 \examples{ 
-data(author)
+data("author")
 ca(author)
 plot(ca(author))
  }

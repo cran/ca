@@ -22,12 +22,11 @@ print.mjca <- function(x, ...)
 
  # Eigenvalues:
   Dimension  <- 1:length(obj$sv)
- # Value      <- round(obj$sv, 6)
   Value      <- round(obj$sv^2, 6)
- # Percentage <- paste(as.character(round(100 * Value / sum(Value), 2)), "%", sep = "")
   Percentage <- paste(as.character(round(100*obj$inertia.e, 2)), "%", sep = "")
 
-  tmp <- rbind(Value = as.character(Value), Percentage = as.character(Percentage))
+  tmp <- rbind(Value = as.character(Value), 
+               Percentage = as.character(Percentage))
   dimnames(tmp)[[2]] <- Dimension  
   Eigenvalues <- tmp
 
@@ -51,11 +50,11 @@ print.mjca <- function(x, ...)
     tmpnames[obj$colsup] <- paste(tmpnames[obj$colsup],"(*)",sep="")
     }
 # BCN 2009_11:
-  if (!is.na(obj$subsetcol[1])){
-    dimnames(tmp)[[2]] <- tmpnames[obj$subsetcol]
-    } else {
+ # if (!is.na(obj$subsetcol[1])){
+ #   dimnames(tmp)[[2]] <- tmpnames[obj$subsetcol]
+ #   } else {
     dimnames(tmp)[[2]] <- tmpnames
-    }
+ #   }
   dn <- paste("Dim.", 1:nd)
   dimnames(tmp)[[1]] <- c("Mass", "ChiDist", "Inertia", dn)
   Column.profiles <- tmp

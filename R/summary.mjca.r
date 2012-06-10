@@ -21,151 +21,117 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
     } else {
     if (nd > length(obj$sv)) nd <- length(obj$sv)
     }
- # bcn 09
- # if (obj$lambda=="adjusted"){
- #   obj.colinertia <- obj$temp0
- #   obj.sv         <- obj$temp1
- #   } else {
- #   obj.colinertia <- obj$colinertia
- #   obj.sv         <- obj$sv
- #   }
- # obj.colinertia <- ifelse(obj$lambda=="adjusted", obj$temp0, obj$colinertia)
- # obj.sv         <- ifelse(obj$lambda=="adjusted", obj$temp1, obj$sv)
 
- # principal coordinates:
- # K   <- dim(obj$rowcoord)[2]
-  K   <- obj$nd.max
+  if (obj$lambda != "JCA"){
+    K   <- obj$nd.max
+	} else {
+	K   <- obj$nd
+	}
   I   <- length(obj$rownames) # dim(obj$rowcoord)[1] 
   J   <- dim(obj$colcoord)[1]
- # evF <- matrix(rep(sqrt(obj$sv[1:K]), I), I, K, byrow = TRUE)
- # evG <- matrix(rep(sqrt(obj$sv[1:K]), J), J, K, byrow = TRUE)
-  evF <- matrix(rep(obj$sv[1:K], I), I, K, byrow = TRUE)
-  evG <- matrix(rep(obj$sv[1:K], J), J, K, byrow = TRUE)
-  rpc <- obj$rowcoord[,1:K] * evF
-  cpc <- obj$colcoord[,1:K] * evG
+
+  cpc <- obj$colpcoord # * evG
+
+
+
  # row profiles:
-  r.names <- abbreviate(obj$rownames, 3)
-  sr      <- obj$rowsup
- # if (!is.na(sr[1])) r.names[sr] <- paste("(*)", r.names[sr], sep = "")
-  r.mass  <- obj$rowmass
-  r.inr   <- obj$rowinertia / sum(obj$rowinertia, na.rm = TRUE)
-  r.ccc   <- matrix(NA, nrow = length(r.names), ncol = nd * 3)
-  for (i in 1:nd)  {
-    r.ccc[,3 * (i - 1) + 1] <- rpc[,i]
-    r.ccc[,3 * (i - 1) + 2] <- obj$rowmass * rpc[,i]^2 / 
-                               obj$rowinertia
-    r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
-                               obj$sv[i]
-#                               obj$sv[i]
-    if (obj$lambda == "indicator"){
+  if (rows){
+    rpc <- obj$rowpcoord # [,1:K] * evF
+    r.names <- abbreviate(obj$rownames, 3)
+    sr      <- obj$rowsup
+    r.mass  <- obj$rowmass
+    r.inr   <- obj$rowinertia / sum(obj$rowinertia, na.rm = TRUE)
+    r.ccc   <- matrix(NA, nrow = length(r.names), ncol = nd * 3)
+    for (i in 1:nd)  {
+      r.ccc[,3 * (i - 1) + 1] <- rpc[,i]
+      r.ccc[,3 * (i - 1) + 2] <- obj$rowmass * rpc[,i]^2 / 
+                                 obj$rowinertia
       r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
-                                 sqrt(obj$sv[i])
+                                 obj$sv[i]
+      if (obj$lambda == "indicator"){
+        r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /
+                                   sqrt(obj$sv[i])
+        }
       }
-    }
-  if (nd > 1) {
-    r.qlt <- apply(r.ccc[,((1:nd-1) * 3 + 2)], 1, sum) 
-    } else {
-    r.qlt <- r.ccc[,((1:nd-1) * 3 + 2)] 
-    }
+    if (nd > 1) {
+      r.qlt <- apply(r.ccc[,((1:nd-1) * 3 + 2)], 1, sum) 
+      } else {
+      r.qlt <- r.ccc[,((1:nd-1) * 3 + 2)] 
+      }
 
-  r1              <- paste(" k=", 1:nd, sep = "")
-  r2              <- rep("cor", nd)
-  r3              <- rep("ctr", nd)
-  rcclab          <- as.vector(rbind(r1, r2, r3))
-  dimnames(r.ccc) <- list(r.names, rcclab)
-  r.out           <- data.frame(r.names, 
-                                round(1000 * r.mass, 0), 
-                                round(1000 * r.qlt, 0),
-                                round(1000 * r.inr, 0), 
-                                round(1000 * r.ccc, 0))
-  dimnames(r.out) <- list(as.character(1:length(r.names)),
-                          c("name", "mass", " qlt", " inr", rcclab))
-
- # column profiles:
- # bcn09
- # getfirst <- function(input) input[1]
- # getlast  <- function(input) input[length(input)]
- # bcn09 
- # c.part1  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getfirst))
- # c.part2  <- unlist(lapply(strsplit(obj$levelnames, "\\."), getlast))
- # c.names  <- paste(abbreviate(c.part1, 3), c.part2, sep = ".") 
-### bcn 2009_11:
- # c.names <- obj$levelnames
-  if (!is.na(obj$subsetcol[1])){
-    c.names  <- obj$levelnames[obj$subsetcol]
+    r1              <- paste(" k=", 1:nd, sep = "")
+    r2              <- rep("cor", nd)
+    r3              <- rep("ctr", nd)
+    rcclab          <- as.vector(rbind(r1, r2, r3))
+    dimnames(r.ccc) <- list(r.names, rcclab)
+    r.out           <- data.frame(r.names, 
+                                  round(1000 * r.mass, 0), 
+                                  round(1000 * r.qlt, 0),
+                                  round(1000 * r.inr, 0), 
+                                  round(1000 * r.ccc, 0))
+    dimnames(r.out) <- list(as.character(1:length(r.names)),
+                            c("name", "mass", " qlt", " inr", rcclab))
     } else {
-    c.names  <- obj$levelnames    
-    }
+	r.out <- list(rows = FALSE)
+	} # END ROWS
+
+ ### COLUMNS:
+  c.names  <- obj$levelnames    
   sc       <- obj$colsup
-  if (!is.na(sc[1])) c.names[sc] <- paste("(*)", c.names[sc], sep = "")
+  if (!is.na(sc[1])){
+    c.names[sc] <- paste("(*)", c.names[sc], sep = "")
+	}
   c.mass   <- obj$colmass
   c.inr    <- obj$colinertia  / sum(obj$colinertia, na.rm = TRUE)
-  c.ccc    <- matrix(NA, nrow = length(c.names), ncol = nd * 3)
-  for (i in 1:nd){
-    c.ccc[,3 * (i - 1) + 1] <- cpc[,i]
-    c.ccc[,3 * (i - 1) + 2] <- obj$colmass * cpc[,i]^2 /
-                               obj$colinertia
-   # c.ccc[,3 * (i - 1) + 2] <- cpc[,i]^2 / obj$coldist^2
-    c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 / 
-                               obj$sv[i]
-#                               obj$sv[i]
-    if (obj$lambda == "indicator"){
-      c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 / 
-                                 sqrt(obj$sv[i])
-      }
-    }
- # bcn 09
- # if (obj$lambda == "adjusted"){
- #   temp.pc  <- obj$colcoord[,1:length(obj$sv)] %*% diag(sqrt(obj$sv))
- #   temp.rcc <- diag(obj$colmass)%*%temp.pc^2
- #   cpc.new  <- diag(1/obj$colinertia)%*%temp.rcc
- #   c.ccc[,3 * ((1:nd) - 1) + 2] <- cpc.new[,1:nd]
- #   }
- # cor and quality for supplementary columns
-  if (!is.na(obj$colsup[1])){
-    i0 <- obj$colsup
-    c.mass[i0] <- NA
-    c.inr[i0]  <- NA
+  if (obj$lambda != "JCA"){
+    c.ccc    <- matrix(NA, nrow = length(c.names), ncol = nd * 3)
     for (i in 1:nd){
-      c.ccc[i0,3 * (i - 1) + 2] <- obj$colmass[i0] * cpc[i0,i]^2 / obj$colinertia[i0]
-      c.ccc[i0,3 * (i - 1) + 3] <- NA
+      c.ccc[,3 * (i - 1) + 1] <- cpc[,i]
+      c.ccc[,3 * (i - 1) + 2] <- obj$colcor[,i]
+      c.ccc[,3 * (i - 1) + 3] <- obj$colctr[,i]
       }
-    }
+    if (nd > 1) { 
+      c.qlt <- apply(c.ccc[,((1:nd - 1) * 3 + 2)], 1, sum) 
+      } else {
+      c.qlt <- c.ccc[,((1:nd - 1) * 3 + 2)] 
+      }
+    c1              <- paste(" k=", 1:nd, sep = "")
+    c2              <- rep("cor", nd)
+    c3              <- rep("ctr", nd)
+    ccclab          <- as.vector(rbind(c1, c2, c3))
+    dimnames(c.ccc) <- list(c.names, ccclab)
+    c.out           <- data.frame(c.names, 
+                                  round(1000 * c.mass, 0), 
+                                  round(1000 * c.qlt, 0),
+                                  round(1000 * c.inr, 0), 
+                                  round(1000 * c.ccc, 0))
+    dimnames(c.out) <- list(as.character(1:length(c.names)),
+                            c("name", "mass", " qlt", " inr", ccclab))
+    } else { #JCA CASE BELOW:
+    c.ccc           <- cpc[,1:nd]
+	ccclab          <- paste(" k=", 1:nd, sep = "")
+    dimnames(c.ccc) <- list(c.names, ccclab)
+    c.out           <- data.frame(c.names, 
+                                  round(1000 * c.mass, 0), 
+                                  round(1000 * c.inr, 0), 
+                                  round(1000 * c.ccc, 0),
+								  round(1000 * obj$colcor, 0),
+								  round(1000 * obj$colctr, 0) )
+    dimnames(c.out) <- list(as.character(1:length(c.names)),
+                            c("name", "mass", " inr", ccclab, "cor", "ctr"))	
+	}
 
-  if (nd > 1) { 
-    c.qlt <- apply(c.ccc[,((1:nd - 1) * 3 + 2)], 1, sum) 
-    } else {
-    c.qlt <- c.ccc[,((1:nd - 1) * 3 + 2)] 
-    }
 
-  c1              <- paste(" k=", 1:nd, sep = "")
-  c2              <- rep("cor", nd)
-  c3              <- rep("ctr", nd)
-  ccclab          <- as.vector(rbind(c1, c2, c3))
-  dimnames(c.ccc) <- list(c.names, ccclab)
-  c.out           <- data.frame(c.names, 
-                                round(1000 * c.mass, 0), 
-                                round(1000 * c.qlt, 0),
-                                round(1000 * c.inr, 0), 
-                                round(1000 * c.ccc, 0))
-  dimnames(c.out) <- list(as.character(1:length(c.names)),
-                          c("name", "mass", " qlt", " inr", ccclab))
-
- # scree plot:
+ ### SCREE PLOT:
   sev.0 <- round(100*obj$inertia.et, 1)
   if (scree) {
-   # if (obj$lambda=="indicator"){
-   #   values     <- obj$sv^2
-   #   } else {
-      values     <- obj$sv^2
-   #   }
+    values     <- obj$sv^2
     values2    <- round(100*values/sum(values), 1)
-    scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, round(cumsum(100*values/sum(values)), 1))
-   # sev.0      <- round(100*sum(values/sum(values)), 1)
+    scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, 
+                        round(cumsum(100*values/sum(values)), 1))
     if (obj$lambda == "adjusted"){
       values     <- round(obj$sv^2, 6)
       values2    <- round(100*obj$inertia.e, 1)
-     # values3    <- rep(NA, length(values))
       values3    <- round(cumsum(100*obj$inertia.e), 1)
       scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, values3)
       }
@@ -175,12 +141,11 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
       values3    <- rep(NA, length(values))
       scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, values3)
       }
-   #   scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, round(cumsum(100*values/sum(values)), 1))
     } else {
     scree.out <- NA
     }
 
- # output:
+ ### OUTPUTPUT:
   out <- list(scree   = scree.out,
               rows    = r.out,
               columns = c.out, 

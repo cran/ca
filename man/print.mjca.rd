@@ -13,7 +13,8 @@ For supplementary points, masses and inertias are not applicable.
 }
 \seealso{\code{\link{mjca}}}
 \examples{
-library(MASS)
-data(farms)
-print(mjca(farms))
+data("wg93")
+print(mjca(wg93[,1:4]))
+# equivalent to:
+mjca(wg93[,1:4])
 }

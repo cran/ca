@@ -34,7 +34,7 @@ plot.mjca <- function(x,
                       dim       = c(1,2), 
                       map       = "symmetric", 
                       centroids = FALSE, 
-                      what      = c("all", "all"), 
+                      what      = c("none", "all"), 
                       mass      = c(FALSE, FALSE), 
                       contrib   = c("none", "none"), 
                       col       = c("#000000", "#FF0000"), 
@@ -45,6 +45,9 @@ plot.mjca <- function(x,
 {
  obj <- x
 
+ # temporary fix for the rows:
+  if (what[1] != "none") what[1] <- "none"
+
  # recycling input:
  if (length(what)    != 2) what    <- rep(what, length = 2)
  if (length(mass)    != 2) mass    <- rep(mass, length = 2)
@@ -53,7 +56,8 @@ plot.mjca <- function(x,
  if (length(labels)  != 2) labels  <- rep(labels, length = 2)
  if (length(pch)     != 4) pch     <- rep(pch, length = 4)
  col.temp <- length(obj$colnames)
- if (length(col) < col.temp + 1)  col <- c(col[1], rep(col[-1], length = col.temp)) 
+ if (length(col) < col.temp + 1)
+   col <- c(col[1], rep(col[-1], length = col.temp)) 
  col <- col[1:(1 + col.temp)]
 
  # check for suprow/-col and 'row-/col.gab/-green'
@@ -88,8 +92,10 @@ plot.mjca <- function(x,
                 symbiplot    = list(x = symrpc, y = symcpc), 
                 rowgab       = list(x = rpc, y = obj$colcoord * obj$colmass),
                 colgab       = list(x = obj$rowcoord * obj$rowmass, y = cpc), 
-                rowgreen     = list(x = rpc, y = obj$colcoord * sqrt(obj$colmass)), 
-                rowgreen     = list(x = obj$rowcoord * sqrt(obj$rowmass), y = cpc)
+                rowgreen     = list(x = rpc, y = obj$colcoord * 
+                                                 sqrt(obj$colmass)), 
+                rowgreen     = list(x = obj$rowcoord * sqrt(obj$rowmass), 
+                                    y = cpc)
                 )
   x <- mtlut[[mti[mt==map]]][[1]]
   y <- mtlut[[mti[mt==map]]][[2]]
@@ -160,13 +166,19 @@ plot.mjca <- function(x,
 
 
  # dimensions to plot
-  if(is.matrix(x)) { x <- x[,dim] } else { x <- matrix(x[dim], ncol = length(dim), nrow = 1) }
-  if(is.matrix(y)) { y <- y[,dim] } else { y <- matrix(y[dim], ncol = length(dim), nrow = 1) }
+  if(is.matrix(x)) { x <- x[,dim] } else { x <- matrix(x[dim], 
+                                                       ncol = length(dim), 
+                                                       nrow = 1) }
+  if(is.matrix(y)) { y <- y[,dim] } else { y <- matrix(y[dim], 
+                                                       ncol = length(dim), 
+                                                       nrow = 1) }
 
 ## plot setup
  # radius/mass
-  if (mass[1]) cex.x <- 0.5 + obj$rowmass^(1/3) / max(obj$rowmass^(1/3)) else cex.x <- 0.5
-  if (mass[2]) cex.y <- 0.5 + obj$colmass^(1/3) / max(obj$colmass^(1/3)) else cex.y <- 1
+  if (mass[1]) cex.x <- 0.5 + obj$rowmass^(1/3) / 
+                        max(obj$rowmass^(1/3)) else cex.x <- 0.5
+  if (mass[2]) cex.y <- 0.5 + obj$colmass^(1/3) / 
+                        max(obj$colmass^(1/3)) else cex.y <- 1
 
  # contributions/colour intensities
   nc0 <- 50
@@ -184,7 +196,8 @@ plot.mjca <- function(x,
     col.x <- collut.x[xtemp]
     }  else 
   if (contrib[1] == "absolute") {
-    cind <- obj$rowmass*(rpc[,dim[1]]^2 + rpc[,dim[2]]^2) / (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
+    cind <- obj$rowmass*(rpc[,dim[1]]^2 + rpc[,dim[2]]^2) / 
+              (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
     cb.x <- col2rgb(col[1])
     p.x <- cb.x[,1] + (cst - cb.x[,1])/indx
     collut.x1 <- rgb(seq(cst, p.x[1], length = nc0/2),
@@ -192,7 +205,8 @@ plot.mjca <- function(x,
                      seq(cst, p.x[3], length = nc0/2), maxColorValue = 255 )
     collut.x2 <- rgb(seq(p.x[1], cb.x[1, 1], length = nc0/2),
                      seq(p.x[2], cb.x[2, 1], length = nc0/2),
-                     seq(p.x[3], cb.x[3, 1], length = nc0/2), maxColorValue = 255 )
+                     seq(p.x[3], cb.x[3, 1], length = nc0/2), 
+                     maxColorValue = 255 )
     collut.x <- c(collut.x1, collut.x2)
     xtemp <- nc0*(cind)
     col.x <- collut.x[xtemp]
@@ -208,7 +222,8 @@ plot.mjca <- function(x,
     col.y <- collut.y[ytemp]
     } 
   if (contrib[2] == "absolute") {
-    cind <- obj$colmass*(cpc[,dim[1]]^2 + cpc[,dim[2]]^2) / (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
+    cind <- obj$colmass*(cpc[,dim[1]]^2 + cpc[,dim[2]]^2) / 
+              (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
     cb.y <- col2rgb(col[2])
     p.y <- cb.y[,1] + (cst - cb.y[,1])/indy
     collut.y1 <- rgb(seq(cst, p.y[1], length = nc0/2),
@@ -216,7 +231,8 @@ plot.mjca <- function(x,
                      seq(cst, p.y[3], length = nc0/2), maxColorValue = 255 )
     collut.y2 <- rgb(seq(p.y[1], cb.y[1, 1], length = nc0/2),
                      seq(p.y[2], cb.y[2, 1], length = nc0/2),
-                     seq(p.y[3], cb.y[3, 1], length = nc0/2), maxColorValue = 255 )
+                     seq(p.y[3], cb.y[3, 1], length = nc0/2), 
+                     maxColorValue = 255 )
     collut.y <- c(collut.y1, collut.y2)
     ytemp <- nc0 * cind
     col.y <- collut.y[ytemp]
@@ -239,7 +255,8 @@ plot.mjca <- function(x,
 
  # plot:
   # par(pty = "s") # replaces by asp=1 below
-  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = "", ylab = "", type = "n", axes = FALSE, asp = 1, ...)
+  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = "", ylab = "", type = "n", 
+       axes = FALSE, asp = 1, ...)
   box()
   abline(h = 0, v = 0, lty = 3)
   axis(1, col = col[1])
@@ -250,7 +267,8 @@ plot.mjca <- function(x,
  # rows
   if (!is.na(x[1]) & labels[1] != 1) {
     if (arrows[1]) {
-      arrows(rep(0, length(x[,1])), rep(0, length(x[,1])), x[,1], x[,2], col = col.x, length = 0.1) 
+      arrows(rep(0, length(x[,1])), rep(0, length(x[,1])), x[,1], x[,2], 
+             col = col.x, length = 0.1) 
       } else {
         points(x[,1], x[,2], cex = cex.x, col = col.x, pch = x.pch)
         }
@@ -264,14 +282,16 @@ plot.mjca <- function(x,
  # columns
   if (!is.na(y[1]) & labels[2] != 1 ) {
     if (arrows[2]) {
-      arrows(rep(0, length(y[,1])), rep(0, length(y[,1])), y[,1], y[,2], col = col.y, length = 0.1) 
+      arrows(rep(0, length(y[,1])), rep(0, length(y[,1])), y[,1], y[,2], 
+             col = col.y, length = 0.1) 
       } else {
         points(y[,1], y[,2], cex = cex.y, col = col.y, pch = y.pch)
         }
     }
   if (labels[2] > 0) {
     yoff1 <- .5 * strwidth(y.names, cex = 0.75) + .5 * strwidth("o", cex = .75)
-    yoff2 <- .5 * strheight(y.names, cex = 0.75) + .5 * strheight("o", cex = .75)
+    yoff2 <- .5 * strheight(y.names, cex = 0.75) + .5 * 
+               strheight("o", cex = .75)
     text(y[,1] + yoff1, y[,2] + yoff2, y.names, cex = 0.75, xpd = TRUE)
     }
 
