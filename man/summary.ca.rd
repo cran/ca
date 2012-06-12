@@ -13,6 +13,6 @@ The function \code{summary.ca} gives the detailed numerical results of the \code
 For supplementary points, masses, inertias and absolute contributions (CTR) are not applicable, but the relative contributions (COR) are valid as well as their sum over the set of chosen \code{nd} dimensions (QLT).
 }
 \examples{
-data(smoke)
+data("smoke")
 summary(ca(smoke))
 }

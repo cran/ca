@@ -2,7 +2,7 @@
 \alias{plot3d.ca}
 \title{Plotting 3D maps in correspondence analysis}
 \description{Graphical display of correspondence analysis in three dimensions}
-\usage{plot3d.ca(x, dim = c(1, 2, 3), map = "symmetric", what = c("all", "all"), 
+\usage{\method{plot3d}{ca}(x, dim = c(1, 2, 3), map = "symmetric", what = c("all", "all"), 
              contrib = c("none", "none"), col = c("#6666FF","#FF6666"), 
              labcol  = c("#0000FF", "#FF0000"), pch = c(16, 1, 18, 9), 
              labels = c(2, 2), sf = 0.00002, arrows  = c(FALSE, FALSE), ...) }

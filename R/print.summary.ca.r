@@ -76,7 +76,8 @@ print.summary.ca <- function(x, ...){
     EV.2[EV.1 == 1] <- ""
     EV.2[EV.1 == 0] <- "0"
     EV1 <- remzero(gluezero(paste(EV.2, EV1, sep = ""), 4, 3))
-    EV.sp <- paste(rep(" ", ifelse(max(EV.1==2), 0, 1)), collapse = "", sep = "")
+    EV.sp <- paste(rep(" ", ifelse(max(EV.1==2), 0, 1)), collapse = "", 
+                   sep = "")
     EV1    <- paste(EV.sp, EV1, sep = "")
     CUMEV1 <- round(CUMEV, 1)
     CUMEV.1 <- floor(log(CUMEV1, base = 10))
@@ -85,11 +86,13 @@ print.summary.ca <- function(x, ...){
     CUMEV.2[CUMEV.1 == 2] <- ""
     CUMEV.2[CUMEV.1 == 1] <- "0"
     CUMEV.2[CUMEV.1 == 0] <- "00"
-    CUMEV1 <- remzero(gluezero(paste(CUMEV.2, CUMEV1, sep = ""), 5, 4), doub = TRUE)
+    CUMEV1 <- remzero(gluezero(paste(CUMEV.2, CUMEV1, sep = ""), 5, 4), 
+                      doub = TRUE)
 
 
     scree.out <- data.frame(Dim   = c(Dim, "", "Total:"), 
-                            Value = c(gluezero(Value0), "--------", gluezero(Value1)), 
+                            Value = c(gluezero(Value0), "--------", 
+                                      gluezero(Value1)), 
                             EV    = c(EV1, "-----", gluezero(EV2, 5, 4)), 
                             CUMEV = c(CUMEV1, "", ""), 
                             scree = c(scree, "", ""))

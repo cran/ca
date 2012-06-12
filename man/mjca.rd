@@ -31,11 +31,17 @@
   \item{rowdist    }{Row chi-square distances to centroid}
   \item{rowinertia }{Row inertias}
   \item{rowcoord   }{Row standard coordinates}
+  \item{rowpcoord  }{Row principal coordinates}
+  \item{rowctr     }{Row contributions}
+  \item{rowcor     }{Row squared correlations}
   \item{colnames   }{Column names}
   \item{colmass    }{Column masses}
   \item{coldist    }{Column chi-square distances to centroid}
   \item{colinertia }{Column inertias}
   \item{colcoord   }{Column standard coordinates}
+  \item{colpcoord  }{Column principal coordinates}
+  \item{colctr     }{column contributions}
+  \item{colcor     }{Column squared correlations}
   \item{colsup     }{Indices of column supplementary points (of the Burt and Indicator matrix)}
   \item{subsetcol  }{Indices of subset columns}
   \item{Burt       }{Burt matrix}
@@ -45,17 +51,36 @@
   \item{call       }{Return of \code{match.call}}
       }
 
-\references{Nenadic, O. and Greenacre, M. (2007), Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. Journal of Statistical Software, 20 (3), available at \url{http://www.jstatsoft.org/v20/i03/}\cr
-            Nenadic, O. and Greenacre, M. (2007), Computation of Multiple Correspondence Analysis, with Code in R, in Multiple Correspondence Analysis and Related Methods (eds. M. Greenacre and J. Blasius), Chapmann & Hall / CRC, Boca Raton, London, New York, pp. 523-551.\cr
-            Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. Sociological Methods and Research, 35, pp. 193-218.}
+\references{Nenadic, O. and Greenacre, M. (2007), Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. \emph{Journal of Statistical Software}, \bold{20 (3)}, \url{http://www.jstatsoft.org/v20/i03/}\cr
+            Nenadic, O. and Greenacre, M. (2007), Computation of Multiple Correspondence Analysis, with Code in R, in \emph{Multiple Correspondence Analysis and Related Methods} (eds. M. Greenacre and J. Blasius), Boca Raton: Chapmann & Hall / CRC, pp. 523-551.\cr
+            Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. \emph{Sociological Methods and Research}, \bold{35}, pp. 193-218.}
 \seealso{\code{\link{eigen}}, \code{\link{plot.mjca}}, \code{\link{summary.mjca}}, \code{\link{print.mjca}} }
 \examples{ 
-library(MASS)
-data(farms)
-mjca(farms)
+data("wg93")
+mjca(wg93[,1:4])
+
+### Different approaches to multiple correspondence analysis:
+# Multiple correspondence analysis based on the indicator matrix:
+mjca(wg93[,1:4], lambda = "indicator")
+
+# Multiple correspondence analysis based on the Burt matrix:
+mjca(wg93[,1:4], lambda = "Burt")
+
+# "Adjusted" multiple correspondence analysis (default setting):
+mjca(wg93[,1:4], lambda = "adjusted")
 
 # Joint correspondence analysis:
-mjca(farms, lambda = "JCA")
+mjca(wg93[,1:4], lambda = "JCA")
 
+
+### Subset analysis and supplementary variables:
+# Subset analysis:
+mjca(wg93[,1:4], subsetcol = (1:20)[-seq(3,18,5)])
+
+# Supplementary variables:
+mjca(wg93, supcol = 5:7)
+
+# Combining supplementary variables and a subset analysis:
+mjca(wg93, supcol = 5:7, subsetcol = (1:20)[-seq(3,18,5)]) 
  }
 \keyword{multivariate}

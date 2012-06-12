@@ -80,19 +80,23 @@ plot3d.ca <- function(x,
                 y = r*sin(pi*i3/180)*sin(pi*j3/180))
     c15 <- list(x = c(-1, -1, rep(1, 8), rep(-1,8), 1, 1, -1, 1, 1, -1), 
                 z = c(1, 1, 1, 1, rep(c(-1,1,1,-1,1,-1,-1,1), 2), rep(-1, 4)), 
-                y = c(-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,-1,1,1,1,1,-1,-1,1,1))
+                y = c(-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,-1,1,1,1,1,-1,
+                      -1,1,1))
     c16 <- list(x = 0, z = 0, y = 0)
     c17 <- list(x = r*sin(pi*i0/180)*cos(pi*j0/180), 
                 z = r*cos(pi*i0/180), 
                 y = r*sin(pi*i0/180)*sin(pi*j0/180))
-    c18 <- list(x = 0.8*c(-1,0,1,1,0,1,1,0,-1,-1,0,-1,1,0,-1,1,0,1,-1,0,1,-1,0,-1),
+    c18 <- list(x = 0.8*c(-1,0,1,1,0,1,1,0,-1,-1,0,-1,1,0,-1,1,0,1,-1,0,1,
+                          -1,0,-1),
                 z = c(rep(c(0,1,0), 4), rep(c(0,-1,0), 4)),
-                y = 0.8*c(-1,0,-1,-1,0,1,1,0,1,1,0,-1,-1,0,-1,1,0,-1,1,0,1,-1,0,1))
+                y = 0.8*c(-1,0,-1,-1,0,1,1,0,1,1,0,-1,-1,0,-1,1,0,-1,1,0,1,
+                          -1,0,1))
     c19 <- list(x = 0, z = 0, y = 0)
     c20 <- list(x = 0, z = 0, y = 0)
     c22 <- list(x = c(-1,1,1,1,-1,1,rep(c(-1,1), each=4),rep(-1,5),1,1,1,-1,1),
                 z = c(rep(1,9),-1,1,-1,1,-1,1,rep(-1,9)),
-                y = c(-1,-1,-1,1,1,1,-1,1,rep(c(-1,1),each=4),-1,1,-1,-1,-1,1,1,1))
+                y = c(-1,-1,-1,1,1,1,-1,1,rep(c(-1,1),each=4),-1,1,-1,-1,-1,
+                      1,1,1))
     c07 <- list(x = c(c22$x, c04$x), z = c(c22$z, c04$z), y = c(c22$y, c04$y))
     c08 <- list(x = c(c03$x, c04$x), z = c(c03$z, c04$z), y = c(c03$y, c04$y))
     c09 <- list(x = c(c05$x, c03$x), z = c(c05$z, c03$z), y = c(c05$y, c03$y))
@@ -116,14 +120,18 @@ plot3d.ca <- function(x,
       coord <- cc[[pchlevels[k]]]
       coord.scale <- cc.scale[pchlevels[k]]
       fm <- c(rep("rgl.lines", 14), "rgl.quads", "rgl.spheres", 
-              rep("rgl.triangles", 2), rep("rgl.spheres", 2), rep("rgl.lines", 5))
+              rep("rgl.triangles", 2), rep("rgl.spheres", 2), 
+              rep("rgl.lines", 5))
       fm.suffix <- c(rep("",15),paste(coord.scale,",",sep=""),"","",
                      rep(paste(coord.scale,",",sep=""),2),rep("",5))
-      x0 <- rep(x[pch==pchlevels[k]], each = length(coord$x)) + coord$x * coord.scale
-      z0 <- rep(z[pch==pchlevels[k]], each = length(coord$z)) + coord$z * coord.scale
-      y0 <- rep(y[pch==pchlevels[k]], each = length(coord$y)) + coord$y * coord.scale
-      eval(parse(text = paste(fm[pchlevels[k]], "(x0, z0, y0,", fm.suffix[pchlevels[k]], 
-                              "size = size, ...)", sep = "")))
+      x0 <- rep(x[pch==pchlevels[k]], each = length(coord$x)) + coord$x * 
+              coord.scale
+      z0 <- rep(z[pch==pchlevels[k]], each = length(coord$z)) + coord$z * 
+              coord.scale
+      y0 <- rep(y[pch==pchlevels[k]], each = length(coord$y)) + coord$y * 
+              coord.scale
+      eval(parse(text = paste(fm[pchlevels[k]], "(x0, z0, y0,", 
+        fm.suffix[pchlevels[k]], "size = size, ...)", sep = "")))
       }
     }
 
@@ -163,8 +171,10 @@ plot3d.ca <- function(x,
                 symbiplot    = list(x = symrpc, y = symcpc), 
                 rowgab       = list(x = rpc, y = obj$colcoord * obj$colmass),
                 colgab       = list(x = obj$rowcoord * obj$rowmass, y = cpc), 
-                rowgreen     = list (x = rpc, y = obj$colcoord * sqrt(obj$colmass)), 
-                colgreen     = list (x = obj$rowcoord * sqrt(obj$rowmass), y = cpc)
+                rowgreen     = list(x = rpc, y = obj$colcoord * 
+                                                 sqrt(obj$colmass)), 
+                colgreen     = list(x = obj$rowcoord * sqrt(obj$rowmass), 
+                                    y = cpc)
                 )
   x     <- mtlut[[mti[mt==map]]][[1]]
   y     <- mtlut[[mti[mt==map]]][[2]]
@@ -230,8 +240,12 @@ plot3d.ca <- function(x,
   y.pch   <- pchlut[[pri[pr==what[2]]]][[2]]
 
  # dimensions to plot
-  if(is.matrix(x)) { x <- x[,dim] } else { x <- matrix(x[dim], ncol = length(dim), nrow = 1) }
-  if(is.matrix(y)) { y <- y[,dim] } else { y <- matrix(y[dim], ncol = length(dim), nrow = 1) }
+  if(is.matrix(x)) { x <- x[,dim] } else { x <- matrix(x[dim], 
+                                                       ncol = length(dim), 
+                                                       nrow = 1) }
+  if(is.matrix(y)) { y <- y[,dim] } else { y <- matrix(y[dim], 
+                                                       ncol = length(dim), 
+                                                       nrow = 1) }
 
 ## plot setup
  # radius/mass
@@ -244,19 +258,21 @@ plot3d.ca <- function(x,
     calpha.x <- obj$rowmass*(rpc[,dim[1]]^2 + rpc[,dim[2]]^2) / obj$rowinertia
     } else 
   if (contrib[1] == "absolute") {
-    calpha.x <- obj$rowmass*(rpc[,dim[1]]^2 + rpc[,dim[2]]^2) / (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
+    calpha.x <- obj$rowmass*(rpc[,dim[1]]^2 + rpc[,dim[2]]^2) / 
+                  (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
     }
 
   if (contrib[2] == "relative") {
     calpha.y <- obj$colmass*(cpc[,dim[1]]^2 + cpc[,dim[2]]^2) / obj$colinertia
     } else
   if (contrib[2] == "absolute") {
-    calpha.y <- obj$colmass*(cpc[,dim[1]]^2 + cpc[,dim[2]]^2) / (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
+    calpha.y <- obj$colmass*(cpc[,dim[1]]^2 + cpc[,dim[2]]^2) / 
+                  (obj$sv[dim[1]]^2 + obj$sv[dim[2]]^2)
     }
 
  ## plotting:
   rgl.clear()
-  rgl.bg(col = c("#aaaaaa", "#99bb99"), front = "lines", sphere = TRUE)
+  rgl.bg(color = c("#aaaaaa", "#99bb99"), front = "lines", sphere = TRUE)
   xt.1 <- c(x[,1], y[,1])
   xt.2 <- c(x[,2], y[,2])
   xt.3 <- c(x[,3], y[,3])
@@ -278,11 +294,13 @@ plot3d.ca <- function(x,
       if (arrows[1]) {
         rglarrows0(x[,1], x[,3], x[,2], col = col[1]) 
         } else {
-          rglplot0(x[,1], x[,3], x[,2], col = col[1], v = cex.x, alpha = calpha.x, pch = x.pch)
+          rglplot0(x[,1], x[,3], x[,2], col = col[1], v = cex.x, 
+                   alpha = calpha.x, pch = x.pch)
           }
       }
     if (labels[1] > 0) {
-      rgl.texts(x[,1] + 100*sf, x[,2] + 750*sf, x[,3]+sf, x.names, size = 0.75, col = labcol[1])
+      rgl.texts(x[,1] + 100*sf, x[,2] + 750*sf, x[,3]+sf, x.names, size = 0.75, 
+                col = labcol[1])
       }
     }
 
@@ -292,11 +310,13 @@ plot3d.ca <- function(x,
       if (arrows[2]) {
         rglarrows0(y[,1], y[,3], y[,2], col = col[2]) 
         } else {
-          rglplot0(y[,1], y[,3], y[,2], col = col[2], v = cex.y, alpha = calpha.y, pch = y.pch)
+          rglplot0(y[,1], y[,3], y[,2], col = col[2], v = cex.y, 
+                   alpha = calpha.y, pch = y.pch)
           }
       }
     if (labels[2] > 0) {
-      rgl.texts(y[,1] + 100*sf, y[,2] + 750*sf, y[,3]+sf, y.names, size = 0.5, col = labcol[2])
+      rgl.texts(y[,1] + 100*sf, y[,2] + 750*sf, y[,3]+sf, y.names, size = 0.5, 
+                col = labcol[2])
       }
     }
 

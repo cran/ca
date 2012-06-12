@@ -1,5 +1,4 @@
 export(ca, iterate.mjca, mjca, pchlist, plot3d.ca)
-import(rgl)
 
 S3method(plot, ca)
 S3method(plot, mjca)

@@ -55,13 +55,13 @@ This function has options for sizing and shading the points.  If the option \cod
 }
 
 \references{
-Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Statistics in Medicine}, 9, pp. 469-485. \cr
-Greenacre, M.J. (1993) \emph{Correspondence Analysis in Practice}.  Academic Press, London. \cr
-Greenacre, M.J. (1993) Biplots in correspondence Analysis, \emph{Journal of Applied Statistics}, 20, pp. 251 - 269.
+Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Statistics in Medicine}, \bold{9}, pp. 469-485. \cr
+Greenacre, M.J. (1993) \emph{Correspondence Analysis in Practice}. London: Academic Press. \cr
+Greenacre, M.J. (1993) Biplots in correspondence Analysis, \emph{Journal of Applied Statistics}, \bold{20}, pp. 251 - 269.
 }
 \seealso{\code{\link{ca}}, \code{\link{summary.ca}}, \code{\link{print.ca}}, \code{\link{plot3d.ca}}, \code{\link{pchlist}}}
 \examples{
-data(smoke)
+data("smoke")
 
 # A two-dimensional map with standard settings
 plot(ca(smoke))
@@ -73,7 +73,7 @@ plot(ca(smoke), mass = c(TRUE, TRUE))
 # symbols and relative contributions by colour intensity.
 # Since the arguments are recycled it is sufficient to give only one argument 
 # for mass and contrib.
-data(author)
+data("author")
 plot(ca(author), what = c("none", "all"), mass = TRUE, contrib = "relative")
 
 }

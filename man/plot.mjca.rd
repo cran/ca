@@ -3,7 +3,7 @@
 \title{Plotting 2D maps in multiple and joint correspondence analysis}
 \description{Graphical display of multiple and joint correspondence analysis results in two dimensions}
 \usage{\method{plot}{mjca}(x, dim = c(1,2), map = "symmetric", centroids = FALSE, 
-     what = c("all", "all"), mass = c(FALSE, FALSE), 
+     what = c("none", "all"), mass = c(FALSE, FALSE), 
      contrib = c("none", "none"), col = c("#000000", "#FF0000"), 
      pch = c(16, 1, 17, 24), labels = c(2, 2), 
      arrows = c(FALSE, FALSE), ...) }
@@ -57,20 +57,16 @@ This function has options for sizing and shading the points.  If the option \cod
 }
 
 \references{
-Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Statistics in Medicine}, 9, pp. 469-485. \cr
-Greenacre, M.J. (1993) \emph{Correspondence Analysis in Practice}.  Academic Press, London. \cr
-Greenacre, M.J. (1993) Biplots in correspondence Analysis, \emph{Journal of Applied Statistics}, 20, pp. 251 - 269.
+Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Statistics in Medicine}, \bold{9}, pp. 469-485. \cr
+Greenacre, M.J. (1993) \emph{Correspondence Analysis in Practice}. London: Academic Press. \cr
+Greenacre, M.J. (1993) Biplots in correspondence Analysis, \emph{Journal of Applied Statistics}, \bold{20}, pp. 251 - 269.
 }
 \seealso{\code{\link{mjca}}, \code{\link{summary.mjca}}, \code{\link{print.mjca}}, \code{\link{pchlist}}}
 \examples{
-library(MASS)
-data(farms)
+data("wg93")
 
 # A two-dimensional map with standard settings
-plot(mjca(farms))
-
-# Mass for columns represented by the size of the point symbols
-plot(mjca(farms), mass = c(FALSE, TRUE))
+plot(mjca(wg93[,1:4]))
 
 }
 

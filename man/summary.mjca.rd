@@ -14,7 +14,6 @@ The function \code{summary.mjca} gives the detailed numerical results of the \co
 For supplementary points, masses, inertias and absolute contributions (CTR) are not applicable, but the relative contributions (COR) are valid as well as their sum over the set of chosen \code{nd} dimensions (QLT).
 }
 \examples{
- library(MASS)
- data(farms)
- summary(mjca(farms))
+ data("wg93")
+ summary(mjca(wg93[,1:4]))
 }
