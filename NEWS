@@ -1,0 +1,26 @@
+Version 0.55 (2014-03-09)
+
+o plot.ca() and plot.mjca() now provide sensible default xlab and ylab
+
+o mjca() now accepts a table object as input, using internal expand.dft
+
+o ca() has been made generic, accepting input in the form of matrices, data frames 
+  (coerced to frequency tables), objects of class "xtabs" or "table" and one-sided
+  formulae of the form ~ F1 + F2, where F1 and F2 are factors.
+
+Version 0.54 (2014-01-05)
+
+o Added xlab=, ylab= and lines= arguments to plot.ca().  The function now returns an
+  invisible result containing the row and column coordinates calculated internally for
+  the plot, for use in additional plot annotation.
+
+o Added xlab=, ylab= arguments to plot.mjca().  The function now returns an
+  invisible result containing the row and column coordinates calculated internally for
+  the plot, for use in additional plot annotation.
+ 
+o For plot.ca(), the defaults for xlab= and ylab= were changed from "" to "_auto_",
+  meaning that the axis labels are auto-generated to be of the form "Dimension X (xx.xx%)"
+  in conformance with other dimension reduction plots.
+
+o Added col.lab argument to plot.ca(), to provide colors for the point labels, similar to
+  col for points.

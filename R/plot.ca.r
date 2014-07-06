@@ -1,3 +1,10 @@
+# Modified 1/8/2014 11:35:50 AM (MF):  
+#    add xlab="", ylab="" arguments
+#    added lines= argument to plot lines
+#    return an invisible result for further plot annotation
+#    Provide default xlab, ylab ="_auto_" to mean auto generate descriptive label
+#    added col.lab argument to provide for colors of text labels
+
 ################################################################################
 # 
 # plot.ca: Plotting method for 'ca'-objects
@@ -22,6 +29,7 @@
 #                  symbols and labels (2) should be plotted
 #
 #  Output: A 2d map via 'plot'
+#          Returns a list of row and column coordinates plotted
 # 
 ################################################################################
 
@@ -32,11 +40,15 @@ plot.ca <- function(x,
                     what    = c("all", "all"), 
                     mass    = c(FALSE, FALSE), 
                     contrib = c("none", "none"), 
-                    col     = c("#0000FF", "#FF0000"), 
-                    pch     = c(16, 1, 17, 24), 
-                    labels  = c(2,2), 
-                    arrows  = c(FALSE, FALSE), 
-                    ...)
+					col     = c("blue", "red"),  # use color names, for readability
+					pch     = c(16, 21, 17, 24), # use more symmetric symbols for sup rows/cols 
+					labels  = c(2,2), 
+					arrows  = c(FALSE, FALSE), 
+					lines   = c(FALSE, FALSE),
+					xlab    = "_auto_",
+					ylab    = "_auto_",
+					col.lab = c("blue", "red"),  # col.lab = "black" gives the previous default
+					...)
 {
   obj <- x
 
@@ -47,7 +59,9 @@ plot.ca <- function(x,
   if (length(col)     != 2)  col     <- rep(col, length = 2)
   if (length(labels)  != 2)  labels  <- rep(labels, length = 2)
   if (length(pch)     != 4)  pch     <- rep(pch, length = 4)
-
+  if (length(lines)   != 2)  lines   <- rep(lines, length = 2)
+  if (length(col.lab) != 2)  col.lab <- rep(col.lab, length = 2)
+  
  # check for suprow/-col and 'row-/col.gab/-green'
   if (!is.numeric(x$suprow)) {
     if (map == "colgab" | map == "colgreen") {
@@ -240,11 +254,21 @@ plot.ca <- function(x,
   lim1 <- range(l1) + c(-.05, .05) * diff(range(l1))
   lim2 <- range(l2) + c(-.05, .05) * diff(range(l2))
 
+ # axis labels
+
+	pct <- 100* (obj$sv^2) / sum(obj$sv^2)
+	if (xlab == "_auto_")
+		xlab = paste("Dimension ", dim[1], 
+	            " (", format(pct[dim[1]], nsmall = 2,  digits = 2), "%)", sep = "") 
+	if (ylab == "_auto_")
+		ylab = paste("Dimension ", dim[2], 
+	            " (", format(pct[dim[2]], nsmall = 2,  digits = 2), "%)", sep = "") 
+
   pty.backup <- par()$pty
 
  # plot:
   # par(pty = "s") # replaced by asp=1 below
-  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = "", ylab = "", type = "n", 
+  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = xlab, ylab = ylab, type = "n", 
        axes = FALSE, asp = 1, ...)
   box()
   abline(h = 0, v = 0, lty = 3)
@@ -263,8 +287,8 @@ plot.ca <- function(x,
   if (labels[1] > 0) {
     xoff1 <- .5 * strwidth(x.names, cex = .75) + .5 * strwidth("o", cex = .75)
     xoff2 <- .5 * strheight(x.names, cex = .75) + .5 * strheight("o", cex = .75)
-    text(x[,1] + xoff1, x[,2] + xoff2, x.names, cex = 0.75, xpd = TRUE)
-    }
+	text(x[,1] + xoff1, x[,2] + xoff2, x.names, cex = 0.75, xpd = TRUE, col=col.lab[1])
+}
 
  # columns
   if (!is.na(y[1]) & labels[2] != 1 ) {
@@ -279,11 +303,23 @@ plot.ca <- function(x,
     yoff1 <- .5 * strwidth(y.names, cex = 0.75) + .5 * strwidth("o", cex = .75)
     yoff2 <- .5 * strheight(y.names, cex = 0.75) + .5 * 
              strheight("o", cex = .75)
-    text(y[,1] + yoff1, y[,2] + yoff2, y.names, cex = 0.75, xpd = TRUE)
-    }
+	text(y[,1] + yoff1, y[,2] + yoff2, y.names, cex = 0.75, xpd = TRUE, col=col.lab[2])
+}
+
+# plot connecting lines (sorted by X value)
+  if (lines[1]) lines(x[order(x[,1]),], col=col.x)
+  if (lines[2]) lines(y[order(y[,1]),], col=col.y)
+
+
+
 
   par(pty = pty.backup)
 
+  # return a result for further plot annotation
+  rownames(x) <- x.names; colnames(x) <- paste0("Dim", dim)
+  rownames(y) <- y.names; colnames(y) <- paste0("Dim", dim)
+  result <- list(rows=x, cols=y)
+  invisible(result)
 }
 
 

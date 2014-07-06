@@ -1,3 +1,5 @@
+# Modified 1-12-11 (MF):  add xlab="", ylab="" arguments
+# Modified 1-05-13 (MF):  return coordinates for further annotation
 ################################################################################
 # 
 # plot.mjca: Plotting method for 'mjca'-objects
@@ -24,6 +26,7 @@
 #                    symbols and labels (2) should be plotted
 #
 #  Output: A 2d map via 'plot'
+#          Returns a list of row and column coordinates plotted
 # 
 ################################################################################
 
@@ -41,7 +44,9 @@ plot.mjca <- function(x,
                       pch       = c(16, 1, 17, 24), 
                       labels    = c(2, 2), 
                       arrows    = c(FALSE, FALSE), 
-                      ...)
+					  xlab    = "_auto_",
+					  ylab    = "_auto_",
+					  ...)
 {
  obj <- x
 
@@ -251,11 +256,24 @@ plot.mjca <- function(x,
   lim1 <- range(l1) + c(-.05, .05) * diff(range(l1))
   lim2 <- range(l2) + c(-.05, .05) * diff(range(l2))
 
+  # axis labels
+  
+  pct <- 100* (obj$sv^2) / sum(obj$sv^2)
+# Bug:?  these pct values don't match the output from summary()
+  if (xlab == "_auto_")
+#      xlab = paste("Dimension ", dim[1], 
+#			  " (", format(pct[dim[1]], nsmall = 2,  digits = 2), "%)", sep = "") 
+      xlab = paste("Dimension ", dim[1]) 
+  if (ylab == "_auto_")
+#	  ylab = paste("Dimension ", dim[2], 
+#			  " (", format(pct[dim[2]], nsmall = 2,  digits = 2), "%)", sep = "") 
+      ylab = paste("Dimension ", dim[2]) 
+
   pty.backup <- par()$pty
 
  # plot:
   # par(pty = "s") # replaces by asp=1 below
-  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = "", ylab = "", type = "n", 
+  plot(c(x[,1],y[,1]), c(x[,2],y[,2]), xlab = xlab, ylab = ylab, type = "n", 
        axes = FALSE, asp = 1, ...)
   box()
   abline(h = 0, v = 0, lty = 3)
@@ -297,7 +315,12 @@ plot.mjca <- function(x,
 
   par(pty = pty.backup)
 
-}
+  # return a result for further plot annotation
+  rownames(x) <- x.names; colnames(x) <- paste0("Dim", dim)
+  rownames(y) <- y.names; colnames(y) <- paste0("Dim", dim)
+  result <- list(rows=x, cols=y)
+  invisible(result)
+  }
 
 
 ################################################################################

@@ -1,3 +1,5 @@
+# MF: ca() has been made an S3 generic function, accepting a variety of input objects
+
 ################################################################################
 # 
 #     ca:  Computation of Simple CA
@@ -13,12 +15,51 @@
 # 
 ################################################################################
 
-ca <- function(obj, 
+ca <- function(obj, ...) {
+	UseMethod("ca")
+}
+
+ca.xtabs <- function(obj, ...){
+	if ((m <- length(dim(obj))) > 2L) 
+		stop(gettextf("frequency table is %d-dimensional", m), 
+				domain = NA)
+	ca.matrix(obj, ...)	
+}
+
+ca.formula <- function (formula, data = parent.frame(), ...) 
+{
+	rhs <- formula[[length(formula)]]
+	if (length(rhs[[2L]]) > 1L || length(rhs[[3L]]) > 1L) 
+		stop("higher-way table requested.  Only 2-way allowed")
+	tab <- table(eval(rhs[[2L]], data), eval(rhs[[3L]], data))
+	names(dimnames(tab)) <- as.character(c(rhs[[2L]], rhs[[3L]]))
+	ca.matrix(tab, ...)
+}
+
+ca.data.frame <- function (obj, ...) {
+	ca.matrix(as.matrix(obj), ...)
+	}
+
+ca.table <- function (obj, ...) {
+	if ((m <- length(dim(obj))) > 2L) 
+		stop(gettextf("frequency table is %d-dimensional", m), 
+				domain = NA)
+	class(obj) <- "matrix"
+	ca.matrix(obj, ...)
+}
+
+ca.default <- function (obj, ...) {
+	stop(paste("class", class(obj), "objects are not valid for ca" ))
+}
+
+	
+ca.matrix <- function(obj, 
                nd        = NA, 
                suprow    = NA, 
                supcol    = NA,
                subsetrow = NA,
-               subsetcol = NA){
+               subsetcol = NA,
+			   ...){
   nd0 <- nd
   I   <- dim(obj)[1] ; J <- dim(obj)[2]
   rn  <- dimnames(obj)[[1]]

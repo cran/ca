@@ -4,8 +4,10 @@
 \description{Graphical display of correspondence analysis results in two dimensions}
 \usage{\method{plot}{ca}(x, dim = c(1,2), map = "symmetric", what = c("all", "all"), 
                mass = c(FALSE, FALSE), contrib = c("none", "none"), 
-               col = c("#0000FF", "#FF0000"), pch = c(16, 1, 17, 24), 
-               labels = c(2, 2), arrows = c(FALSE, FALSE), ...) }
+               col = c("blue", "red"), pch = c(16, 21, 17, 24), 
+               labels = c(2, 2), arrows = c(FALSE, FALSE),
+               lines = c(FALSE, FALSE), xlab = "_auto_", ylab = "_auto_",
+               col.lab = c("blue", "red"), ...) }
 \arguments{
   \item{x}{Simple correspondence analysis object returned by \code{\link{ca}}}
   \item{dim}{Numerical vector of length 2 indicating the dimensions to plot on horizontal and vertical axes respectively; default is first dimension horizontal and second dimension vertical.}
@@ -35,6 +37,9 @@
   \item{pch}{Vector of length 4 giving the type of points to be used for row active and supplementary, column active and supplementary points. See \code{\link{pchlist}} for a list of symbols.}
   \item{labels}{Vector of length two specifying if the plot should contain symbols only (\kbd{0}), labels only (\kbd{1}) or both symbols and labels (\kbd{2}). Setting \code{labels} to \kbd{2} results in the symbols being plotted at the coordinates and the labels with an offset.}
   \item{arrows}{Vector of two logicals specifying if the plot should contain points (\kbd{FALSE}, default) or arrows (\kbd{TRUE}). First value sets the rows and the second value sets the columns.}
+  \item{lines}{Vector of two logicals specifying if the plot should join the points with lines (\kbd{FALSE}, default) or arrows (\kbd{TRUE}). First value sets the rows and the second value sets the columns.}
+  \item{xlab, ylab}{Labels for horizontal and vertical axes.  The default, \code{"_auto_"} means that the function auto-generates a label of the form \code{Dimension X (xx.xx \%}}
+  \item{col.lab}{Vector of length 2 specifying the colours of row and column point labels}
   \item{...}{Further arguments passed to \code{\link{plot}} and \code{\link{points}}.}
           }
 \details{
@@ -52,7 +57,15 @@ The function \code{plot.ca} makes a two-dimensional map of the object created by
   \item{-}{\kbd{"rowgreen"} or \kbd{"colgreen"} - these are similar to \kbd{"rowgab"} and \kbd{"colgab"} except that the points in standard coordinates are multiplied by the square root of the corresponding masses, giving reconstructions of the standardized residuals.}
 }
 This function has options for sizing and shading the points.  If the option \code{mass} is \kbd{TRUE} for a set of points, the size of the point symbol is proportional to the relative frequency (mass) of each point.  If the option \code{contrib} is \kbd{"absolute"} or \kbd{"relative"} for a set of points, the colour intensity of the point symbol is proportional  to the absolute contribution of the points to the planar display or, respectively, the quality of representation of the points in the display.
+To globally resize all the points (and text labels), use \code{par("cex"=)} before the plot.
 }
+
+\value{
+In addition to the side effect of producing the plot, the function invisibly returns the coordinates
+of the plotted points, a list of two components, with names \code{rows} and \code{cols}.
+These can be used to further annotate the plot using base R plotting functions.
+}
+
 
 \references{
 Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Statistics in Medicine}, \bold{9}, pp. 469-485. \cr

@@ -2,10 +2,11 @@
 \alias{mjca}
 \title{Multiple and joint correspondence analysis}
 \description{Computation of multiple and joint correspondence analysis.}
-\usage{mjca(obj, nd = 2, lambda = "adjusted", supcol = NA, subsetcol = NA, 
-     ps = "", maxit = 50, epsilon = 0.0001)}
+\usage{mjca(obj, nd = 2, lambda = c("adjusted", "indicator", "Burt", "JCA"), 
+     supcol = NA, subsetcol = NA, 
+     ps = ":", maxit = 50, epsilon = 0.0001)}
 \arguments{
-  \item{obj      }{A response pattern matrix (data frame containing factors).}
+  \item{obj      }{A response pattern matrix (data frame containing factors), or a frequency table (a table object)}
   \item{nd       }{Number of dimensions to be included in the output; if NA the maximum possible dimensions are included.}
   \item{lambda   }{Gives the scaling method. Possible values include \kbd{"indicator"}, \kbd{"Burt"}, \kbd{"adjusted"} and \kbd{"JCA"}.
                 Using \kbd{lambda = "JCA"} results in a joint correspondence analysis using iterative adjusment of the Burt matrix in the solution space.}
@@ -82,5 +83,11 @@ mjca(wg93, supcol = 5:7)
 
 # Combining supplementary variables and a subset analysis:
 mjca(wg93, supcol = 5:7, subsetcol = (1:20)[-seq(3,18,5)]) 
+
+# table input
+data(UCBAdmissions)
+mjca(UCBAdmissions)
+plot(mjca(UCBAdmissions))
+
  }
 \keyword{multivariate}
