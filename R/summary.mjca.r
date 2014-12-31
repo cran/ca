@@ -12,7 +12,7 @@
 ################################################################################
 
 
-summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
+summary.mjca <- function(object, scree = TRUE, rows = FALSE, columns = TRUE, ...)
   {
   obj <- object
   nd  <- obj$nd
@@ -72,10 +72,11 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
     dimnames(r.out) <- list(as.character(1:length(r.names)),
                             c("name", "mass", " qlt", " inr", rcclab))
     } else {
-	r.out <- list(rows = FALSE)
+	r.out <- NULL
 	} # END ROWS
 
  ### COLUMNS:
+ if (columns){
   c.names  <- obj$levelnames    
   sc       <- obj$colsup
   if (!is.na(sc[1])){
@@ -120,7 +121,10 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
     dimnames(c.out) <- list(as.character(1:length(c.names)),
                             c("name", "mass", " inr", ccclab, "cor", "ctr"))	
 	}
-
+	} else {
+		c.out <- NULL
+	} # END COLUMNS
+	
 
  ### SCREE PLOT:
   sev.0 <- round(100*obj$inertia.et, 1)
@@ -142,7 +146,7 @@ summary.mjca <- function(object, scree = TRUE, rows = FALSE, ...)
       scree.out  <- cbind(1:length(obj$sv), round(values, 6), values2, values3)
       }
     } else {
-    scree.out <- NA
+    scree.out <- NULL
     }
 
  ### OUTPUTPUT:

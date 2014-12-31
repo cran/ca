@@ -9,7 +9,9 @@ mjca <- function(obj,
                  subsetcol = NA, 
                  ps = ":", 
                  maxit = 50, 
-                 epsilon = 0.0001){
+                 epsilon = 0.0001, 
+				 # (2014-10) return Indicator matrix (temporary "hack")  
+				 reti = FALSE){
 
 ################################################################################
  ##### Part 1: Input checks:
@@ -179,6 +181,8 @@ mjca <- function(obj,
   rm         <- apply(Z.0/sum(Z.0), 1, sum)
   S          <- diag(sqrt(1/cm)) %*% (P - cm %*% t(cm)) %*% diag(sqrt(1/cm))
   evd.S      <- eigen(S)
+### FIX (2014-10, negative eigenvalues):
+  evd.S$values[evd.S$values < 0] <- 0
 ### FIX (2011-09):
  #  obj.num    <- apply(obj[,Qind], 2, as.numeric)
   obj.num    <- as.matrix(data.frame(lapply(obj[,Qind], as.numeric)))
@@ -608,7 +612,12 @@ mjca <- function(obj,
     cm         <- c(cm, rep(NA, J.sup))
     }
   col.names <- col.names0
-
+# (2014-10, returning Indicator matrix)
+if (reti == TRUE){
+  indmat <- Z.0
+  } else {
+  indmat <- NA
+  }  
 # balkan solution for colcor > 1 (2011-09):
 # adjusted analysis only!
 if (lambda == "adjusted"){
@@ -619,6 +628,24 @@ if (lambda == "adjusted"){
                             byrow = TRUE)
     }
   }
+
+# MF 11-04-14: add dimnames attributes to some components. This is messy because components are
+#  renamed in the output list. Withdrew this, because it doesn't work in all cases, and really
+#  isn't necessary.
+  
+#  dims <- paste0("Dim", seq_along(lambda0)) 
+##  dimnames(rowcoord) <- list(rn.0, dims)
+#  dimnames(colcoord)  <- list(col.names, dims)
+  
+# return a component containing factors and levels that need not be parsed from col.names
+  factors <- cbind(factor = fn, level = ln)
+# add row- and columnnames to Burt matrix
+  if (!is.na(subsetcol[1]) & !is.na(ind.sup.foo[1]) ){
+    dimnames(B.out) <- list(col.names[-ind.sup.foo], col.names[-ind.sup.foo])
+    } else { 
+    dimnames(B.out) <- list(col.names, col.names)
+	}
+  
  # wrap up results
   mjca.output <- list(sv         = sqrt(lambda0), 
                       lambda     = lambda,
@@ -626,6 +653,7 @@ if (lambda == "adjusted"){
                       inertia.t  = lambda.t,
                       inertia.et = lambda.et,
                       levelnames = col.names,
+					  factors    = factors,
                       levels.n   = levels.n.0,
                       nd         = nd,
                       nd.max     = nd.max,
@@ -656,6 +684,7 @@ if (lambda == "adjusted"){
                       Burt.upd   = B.star,
                       subinertia = subin,
                       JCA.iter   = JCA.it,
+					  indmat     = indmat, 
                       call       = match.call())
   class(mjca.output) <- "mjca"
   return(mjca.output)

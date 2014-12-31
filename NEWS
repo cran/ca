@@ -1,3 +1,31 @@
+Version 0.58 (2014-12-31)
+o mjca(): Added option 'reti' (logical, if TRUE returns the indicator matrix as $indmat). 
+o mjca(): Fixed potentially negative eigenvalues (numerical issue; negative ev's are set to zero).
+o mjca(): Burt matrices ($Burt) now with row- and columnnames.
+o print.summary.ca(): Fixed scree plot.
+
+Version 0.57 (2014-12-30)
+
+o Fixed bug in print.summary.mcja re columns
+
+o In plot.ca() and plot.mjca(), for labels=(1,1), don't offset the labels from the points
+
+
+Version 0.56 (2014-11-04)
+
+o Begin to assign dimnames to matrices from ca() and mjca()--- for now, just the coordinates matrices
+
+o mjca() now returns an additional component, factors, containing factor names and levels, to facilitate plotting
+  and manipulation. This can be used to customize the color, symbols, and labels in plots.
+
+o summary.ca() gains rows= and columns= arguments that can be used like scree= to suppress parts of the output.
+
+o summary.mjca() gains a similar columns= argument
+
+o Fixed calls to rgl functions in plot3d.ca.r to avoid 'no global binding' warnings.
+
+o Fixed bug in plot.mcja() with dimension percentages for lambda="adjusted"
+
 Version 0.55 (2014-03-09)
 
 o plot.ca() and plot.mjca() now provide sensible default xlab and ylab

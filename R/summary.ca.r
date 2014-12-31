@@ -1,18 +1,22 @@
+# MF: added rows= and columns= arguments to allow these to be suppressed
+
 ################################################################################
 # 
 # summary.ca: Summary method for 'ca'-objects
 #
-#      Input: object The 'ca' object which should be summarized
-#             scree  Logical indicating if a scree-plot should be included
-#                    (default: TRUE)
-#             nd     Maximum dimension to include in contributions (default: 2)
+#      Input: object   The 'ca' object which should be summarized
+#             scree    Logical indicating if a scree-plot should be included
+#                      (default: TRUE)
+#             rows     Logical: should row summaries be included?
+#             columns  Logical: should col summaries be included?
+#             nd       Maximum dimension to include in contributions (default: 2)
 #
 #     Output: summary method for 'ca' object
 # 
 ################################################################################
 
 
-summary.ca <- function(object, scree = TRUE, ...){
+summary.ca <- function(object, scree = TRUE, rows=TRUE, columns=TRUE, ...){
   obj <- object
  # if (is.na(nd)) nd <- length(obj$sv)
  # if (dim(obj$rowcoord)[2] < nd) nd <- dim(obj$rowcoord)[2]
@@ -42,6 +46,10 @@ summary.ca <- function(object, scree = TRUE, ...){
     foo  <- paste(foo1[foo2], collapse = "")
     return(foo)
     }
+
+if(!rows) {
+	r.out <- NULL
+	} else {
   rnames.temp <- unlist(lapply(obj$rownames, strnascii))
   r.names     <- abbreviate(rnames.temp, 4)
   sr          <- obj$rowsup
@@ -91,9 +99,13 @@ summary.ca <- function(object, scree = TRUE, ...){
                                 round(1000 * r.ccc, 0))
   dimnames(r.out) <- list(as.character(1:length(r.names)),
                           c("name", "mass", " qlt", " inr", rcclab))
+  }
 
- # columns:
+# columns:
 # 2009_11:
+if(!columns) {
+	c.out <- NULL
+} else {
   cnames.temp <- unlist(lapply(obj$colnames, strnascii))
   c.names     <- abbreviate(cnames.temp, 4)
   sc      <- obj$colsup
@@ -142,8 +154,9 @@ summary.ca <- function(object, scree = TRUE, ...){
                                 round(1000 * c.ccc, 0))
   dimnames(c.out) <- list(as.character(1:length(c.names)),
                           c("name", "mass", " qlt", " inr", ccclab))
+}
 
- # scree plot:
+# scree plot:
   if (scree) {
 #    values     <- round(obj$sv^2, 6)
 #    values2    <- round(100*(obj$sv^2)/sum(obj$sv^2), 1)
@@ -153,7 +166,7 @@ summary.ca <- function(object, scree = TRUE, ...){
     values3    <- cumsum(100*(obj$sv^2)/sum(obj$sv^2))
     scree.out  <- cbind(1:length(obj$sv), values, values2, values3)
     } else {
-    scree.out <- NA
+    scree.out <- NULL
     }
 
  # output:

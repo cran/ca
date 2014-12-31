@@ -1,4 +1,5 @@
 # MF: ca() has been made an S3 generic function, accepting a variety of input objects
+# MF: assign dimnames to matrices in the output
 
 ################################################################################
 # 
@@ -291,6 +292,12 @@ ca.matrix <- function(obj,
  #   phi <- phi%*%signmat
  #   gam <- gam%*%signmat
  #   }
+
+# MF 11-04-14: add dimnames attributes to some components??
+#  
+dims <- paste0("Dim", seq_along(sv)) 
+dimnames(phi) <- list(rn, dims)
+dimnames(gam) <- list(cn, dims)
 
 ca.output <- 
 list(sv         = sv, 

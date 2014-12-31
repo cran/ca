@@ -10,7 +10,7 @@
 
 print.summary.mjca <- function(x, ...){
   object <- x
-  if (!is.na(object$scree)[1]){
+  if (!is.null(object$scree)){
     cat("\n")
    # init:
     nchars <- 25
@@ -23,7 +23,8 @@ print.summary.mjca <- function(x, ...){
     CUMEV  <- crev[Dim]
     sev <- object$sev
     if (length(rev)>1) {
-      st <- round(nchars * (rev - min(rev)) / diff(range(rev)), 0)
+  #    st <- round(nchars * (rev - min(rev)) / diff(range(rev)), 0)
+      st <- round(nchars * rev/sum(rev), 0)
       } else {
       st <- nchars
       }
@@ -121,7 +122,7 @@ print.summary.mjca <- function(x, ...){
     }
 
  # print row/column summary:
-  if (object$rows[[1]]){
+  if (!is.null(object$rows)){
     r.out   <- object$rows
     n1      <- dim(r.out)[1]
     n2      <- dim(r.out)[2]
@@ -137,9 +138,13 @@ print.summary.mjca <- function(x, ...){
     r.nn <- c(r.nn, "")
     colnames(r.new) <- r.nn
     rownames(r.new) <- 1:n1
-	}
+	# print rows
+	cat("\nRows:\n")
+	print(as.matrix(r.new), quote = FALSE, right = TRUE)
+}
 
  ### COLUMNS:
+ if (!is.null(object$columns)){
   c.out   <- object$columns
   n1      <- dim(c.out)[1]
   n2      <- dim(c.out)[2]
@@ -163,15 +168,13 @@ print.summary.mjca <- function(x, ...){
   colnames(c.new) <- c.nn
   rownames(c.new) <- 1:n1
 
- ### PRINT ROWS/COLUMNS:
-  if (object$rows[[1]]){
-    cat("\nRows:\n")
-    print(as.matrix(r.new), quote = FALSE, right = TRUE)
-	}
+ ### PRINT COLUMNS:
   cat("\nColumns:\n")
   print(as.matrix(c.new), quote = FALSE, right = TRUE)
   cat("\n")
   }
+
+}
 
 ################################################################################
 

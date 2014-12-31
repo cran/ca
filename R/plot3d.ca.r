@@ -139,7 +139,7 @@ plot3d.ca <- function(x,
     x.new <- as.vector(rbind(rep(0,length(x)),x))
     y.new <- as.vector(rbind(rep(0,length(y)),y))
     z.new <- as.vector(rbind(rep(0,length(z)),z))
-    rgl.lines(x.new, z.new, y.new, color = col)
+    rgl::rgl.lines(x.new, z.new, y.new, color = col)
     }
 
 ########## END OF RGLPLOT0
@@ -271,22 +271,22 @@ plot3d.ca <- function(x,
     }
 
  ## plotting:
-  rgl.clear()
-  rgl.bg(color = c("#aaaaaa", "#99bb99"), front = "lines", sphere = TRUE)
+  rgl::rgl.clear()
+  rgl::rgl.bg(color = c("#aaaaaa", "#99bb99"), front = "lines", sphere = TRUE)
   xt.1 <- c(x[,1], y[,1])
   xt.2 <- c(x[,2], y[,2])
   xt.3 <- c(x[,3], y[,3])
   x001 <- range(xt.1[!is.na(xt.1)])
   x003 <- range(xt.2[!is.na(xt.2)])
   x002 <- range(xt.3[!is.na(xt.3)])
-  rgl.lines(x001, c(0, 0), c(0, 0), col = "#0000ff")
-  rgl.lines(c(0, 0), x003, c(0, 0), col = "#0000ff")
-  rgl.lines(c(0, 0), c(0, 0), x002, col = "#0000ff")
+  rgl::rgl.lines(x001, c(0, 0), c(0, 0), col = "#0000ff")
+  rgl::rgl.lines(c(0, 0), x003, c(0, 0), col = "#0000ff")
+  rgl::rgl.lines(c(0, 0), c(0, 0), x002, col = "#0000ff")
 
  # axis labels
-  rgl.texts(x001[2], 0, 0, dim[1] , col = "#0000ff")
-  rgl.texts(0, x003[2], 0, dim[2] , col = "#0000ff")
-  rgl.texts(0, 0, x002[2], dim[3] , col = "#0000ff")
+  rgl::rgl.texts(x001[2], 0, 0, dim[1] , col = "#0000ff")
+  rgl::rgl.texts(0, x003[2], 0, dim[2] , col = "#0000ff")
+  rgl::rgl.texts(0, 0, x002[2], dim[3] , col = "#0000ff")
 
  # rows
   if (!is.na(x[1])) {
@@ -299,7 +299,7 @@ plot3d.ca <- function(x,
           }
       }
     if (labels[1] > 0) {
-      rgl.texts(x[,1] + 100*sf, x[,2] + 750*sf, x[,3]+sf, x.names, size = 0.75, 
+      rgl::rgl.texts(x[,1] + 100*sf, x[,2] + 750*sf, x[,3]+sf, x.names, size = 0.75, 
                 col = labcol[1])
       }
     }
@@ -315,7 +315,7 @@ plot3d.ca <- function(x,
           }
       }
     if (labels[2] > 0) {
-      rgl.texts(y[,1] + 100*sf, y[,2] + 750*sf, y[,3]+sf, y.names, size = 0.5, 
+      rgl::rgl.texts(y[,1] + 100*sf, y[,2] + 750*sf, y[,3]+sf, y.names, size = 0.5, 
                 col = labcol[2])
       }
     }
