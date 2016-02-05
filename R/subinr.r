@@ -1,4 +1,6 @@
 ################################################################################
+# subinr(): Computing inertia of 'sub-matrices' (ca package 0.70)
+################################################################################
 subinr <- function(B, ind) {
   nn   <- length(ind)
   subi <- matrix(NA, nrow = nn, ncol = nn)
@@ -13,6 +15,6 @@ subinr <- function(B, ind) {
       subi[i,j] <- sum((tempmat - ex)^2 / ex)
       }
     }
-  subi / nn^2
+  return(subi/nn^2)
   }
 ################################################################################

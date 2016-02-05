@@ -1,13 +1,6 @@
 ################################################################################
-# 
-# print.summary.mjca: (Generic) function for printing summarized 'ca'-objects
-#
-#      Input: x The 'mjca' object which should be summarized
-#
-#     Output: summary method for 'mjca' object
-# 
+# print.summary.mjca(): Printing summarized mjca objects (ca package 0.70)
 ################################################################################
-
 print.summary.mjca <- function(x, ...){
   object <- x
   if (!is.null(object$scree)){
@@ -23,12 +16,10 @@ print.summary.mjca <- function(x, ...){
     CUMEV  <- crev[Dim]
     sev <- object$sev
     if (length(rev)>1) {
-  #    st <- round(nchars * (rev - min(rev)) / diff(range(rev)), 0)
       st <- round(nchars * rev/sum(rev), 0)
       } else {
       st <- nchars
       }
-
     scree <- character(length(Dim))
     for (q in Dim) {
       if (!is.na(st[q])){
@@ -74,8 +65,7 @@ print.summary.mjca <- function(x, ...){
       EV.2[EV.1 == 1] <- ""
       EV.2[EV.1 == 0] <- "0"
       EV <- remzero(gluezero(paste(EV.2, EV, sep = ""), 4, 3))
-      EV.sp <- paste(rep(" ", ifelse(max(EV.1==2), 0, 1)), collapse = "", 
-                     sep = "")
+      EV.sp <- paste(rep(" ", ifelse(max(EV.1==2), 0, 1)), collapse = "", sep = "")
       EV    <- paste(EV.sp, EV, sep = "")
       }
    # add leading space:
@@ -86,38 +76,30 @@ print.summary.mjca <- function(x, ...){
       CUMEV.2[CUMEV.1 == 2] <- ""
       CUMEV.2[CUMEV.1 == 1] <- "0"
       CUMEV.2[CUMEV.1 == 0] <- "00"
-      CUMEV <- remzero(gluezero(paste(CUMEV.2, CUMEV, sep = ""), 5, 4), 
-                       doub = TRUE)
+      CUMEV <- remzero(gluezero(paste(CUMEV.2, CUMEV, sep = ""), 5, 4), doub = TRUE)
       }
     scree.out <- data.frame(Dim   = c(Dim, "", "Total:"), 
-                            Value = c(gluezero(as.character(Value)), "--------", 
-                                      gluezero(as.character(valuesum), 8, 2)), 
-                            EV    = c(EV, "-----", ifelse(!is.na(sev), 
-                                      gluezero(sev,5,4), "")), 
+                            Value = c(gluezero(as.character(Value)), "--------", gluezero(as.character(valuesum), 8, 2)), 
+                            EV    = c(EV, "-----", ifelse(!is.na(sev), gluezero(sev,5,4), "")), 
                             CUMEV = c(CUMEV, "", ""), 
                             scree = c(scree, "", ""))
-
     colnames(scree.out) <- c("dim", "value", "  %", "cum%", " scree plot")
     if (is.na(object$JCA.nit[1])){
       cat("Principal inertias (eigenvalues):\n\n")
       scree.out <- as.matrix(scree.out)
-     # fix for rownames showing up in scree-plot
-     # dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
       rownames(scree.out) <- rep("", nrow(scree.out))
       print(as.matrix(scree.out), quote = FALSE)
       cat("\n")
       } else {
       cat("Principal inertias (eigenvalues):\n\n")
       scree.out <- as.matrix(scree.out[,1:2])
-      dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
+#      dimnames(scree.out)[[1]] <- rep("", length(dimnames(scree.out)[[1]]))
+      rownames(scree.out) <- rep("", nrow(scree.out))
       print(as.matrix(scree.out), quote = FALSE)
-      cat(paste("\n Diagonal inertia discounted from eigenvalues: ", 
-                round(object$JCA.ind, 7), sep=""))
-      cat(paste("\n Percentage explained by JCA in ", object$JCA.nd, 
-                " dimensions: ", sev, "%", sep=""))
+      cat(paste("\n Diagonal inertia discounted from eigenvalues: ", round(object$JCA.ind, 7), sep = ""))
+      cat(paste("\n Percentage explained by JCA in ", object$JCA.nd, " dimensions: ", sev, "%", sep = ""))
       cat("\n (Eigenvalues are not nested)")
-      cat(paste("\n [Iterations in JCA: ", object$JCA.nit, " , epsilon = ", 
-                round(object$JCA.eps, 7), "]\n\n", sep=""))
+      cat(paste("\n [Iterations in JCA: ", object$JCA.nit, " , epsilon = ", round(object$JCA.eps, 7), "]\n\n", sep = ""))
       }
     }
 
@@ -132,49 +114,44 @@ print.summary.mjca <- function(x, ...){
     r.nn    <- c("", r.names[1], "", r.names[2:4])
     for (q in 1:((n2 - 4) / 3)){
       r.new <- cbind(r.new, r.dummy, r.out[,(5 + (q - 1) * 3):(5 + q * 3 - 1)])
-      r.nn <- c(r.nn, "", r.names[(5 + (q - 1) * 3):(5 + q * 3 - 1)])
+      r.nn  <- c(r.nn, "", r.names[(5 + (q - 1) * 3):(5 + q * 3 - 1)])
       }
     r.new <- cbind(r.new, r.dummy)
-    r.nn <- c(r.nn, "")
+    r.nn  <- c(r.nn, "")
     colnames(r.new) <- r.nn
     rownames(r.new) <- 1:n1
-	# print rows
-	cat("\nRows:\n")
-	print(as.matrix(r.new), quote = FALSE, right = TRUE)
-}
-
+    # print rows
+    cat("\nRows:\n")
+    print(as.matrix(r.new), quote = FALSE, right = TRUE)
+    }
  ### COLUMNS:
- if (!is.null(object$columns)){
-  c.out   <- object$columns
-  n1      <- dim(c.out)[1]
-  n2      <- dim(c.out)[2]
-  c.names <- dimnames(c.out)[[2]]
-  c.dummy <- rep("|", n1)
-  if (is.na(object$JCA.nit[1])){
-    c.new   <- cbind(c.dummy, c.out[,1], c.dummy, c.out[,2:4])
-    c.nn    <- c("", c.names[1], "", c.names[2:4])
-    for (q in 1:((n2 - 4) / 3)){
-      c.new <- cbind(c.new, c.dummy, c.out[,(5 + (q - 1) * 3):(5 + q * 3 - 1)])
-      c.nn <- c(c.nn, "", c.names[(5 + (q - 1) * 3):(5 + q * 3 - 1)])
+  if (!is.null(object$columns)){
+    c.out   <- object$columns
+    n1      <- dim(c.out)[1]
+    n2      <- dim(c.out)[2]
+    c.names <- dimnames(c.out)[[2]]
+    c.dummy <- rep("|", n1)
+    if (is.na(object$JCA.nit[1])){
+      c.new   <- cbind(c.dummy, c.out[,1], c.dummy, c.out[,2:4])
+      c.nn    <- c("", c.names[1], "", c.names[2:4])
+      for (q in 1:((n2 - 4) / 3)){
+        c.new <- cbind(c.new, c.dummy, c.out[,(5 + (q - 1) * 3):(5 + q * 3 - 1)])
+        c.nn <- c(c.nn, "", c.names[(5 + (q - 1) * 3):(5 + q * 3 - 1)])
+        }
+      } else { #JCA BELOW:
+      c.new <- cbind(c.dummy, c.out[,1], c.dummy, c.out[,2:3], c.dummy, 
+                     c.out[,4:(4+object$JCA.nd-1)], c.dummy, c.out[,(n2-1):n2])
+      c.nn  <- c("", c.names[1], "", c.names[2:3], "", 
+                 c.names[4:(4+object$JCA.nd-1)], "", c.names[(n2-1):n2])
       }
-    } else { #JCA BELOW:
-	c.new <- cbind(c.dummy, c.out[,1], c.dummy, c.out[,2:3], c.dummy, 
-	               c.out[,4:(4+object$JCA.nd-1)], c.dummy, c.out[,(n2-1):n2])
-	c.nn  <- c("", c.names[1], "", c.names[2:3], "", 
-	           c.names[4:(4+object$JCA.nd-1)], "", c.names[(n2-1):n2])	
-	}
-  c.new <- cbind(c.new, c.dummy)
-  c.nn <- c(c.nn, "")
-  colnames(c.new) <- c.nn
-  rownames(c.new) <- 1:n1
-
- ### PRINT COLUMNS:
-  cat("\nColumns:\n")
-  print(as.matrix(c.new), quote = FALSE, right = TRUE)
-  cat("\n")
+    c.new <- cbind(c.new, c.dummy)
+    c.nn  <- c(c.nn, "")
+    colnames(c.new) <- c.nn
+    rownames(c.new) <- 1:n1
+   ### PRINT COLUMNS:
+    cat("\nColumns:\n")
+    print(as.matrix(c.new), quote = FALSE, right = TRUE)
+    cat("\n")
+    }
   }
-
-}
-
 ################################################################################
-

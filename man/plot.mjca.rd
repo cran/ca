@@ -5,7 +5,8 @@
 \usage{\method{plot}{mjca}(x, dim = c(1,2), map = "symmetric", centroids = FALSE, 
      what = c("none", "all"), mass = c(FALSE, FALSE), 
      contrib = c("none", "none"), col = c("#000000", "#FF0000"), 
-     pch = c(16, 1, 17, 24), labels = c(2, 2), 
+     pch = c(16, 1, 17, 24), 
+     labels = c(2, 2), collabels = c("both", "level", "factor"),
      arrows = c(FALSE, FALSE), xlab = "_auto_", ylab = "_auto_", ...) }
 \arguments{
   \item{x}{Multiple or joint correspondence analysis object returned by \code{\link{mjca}}}
@@ -32,12 +33,22 @@
                  \kbd{"none"} (contributions are not indicated in the plot).\cr
                  \kbd{"absolute"} (absolute contributions are indicated by colour intensities).\cr
                  \kbd{"relative"} (relative contributions are indicated by colour intensities).\cr
-                 If set to \kbd{"absolute"} or \kbd{"relative"}, points with zero contribution are displayed in white. The higher the contribution of a point, the closer the corresponding colour to the one specified by the \code{col} option.}
-  \item{col}{Vector of length 2 specifying the colours of row and column point symbols, by default black for rows and red for columns. Colours can be entered in hexadecimal (e.g. \kbd{"#FF0000"}), rgb (e.g. \kbd{rgb(1,0,0)}) values or by R-name (e.g. \kbd{"red"}). }
-  \item{pch}{Vector of length 4 giving the type of points to be used for row active and supplementary, column active and supplementary points. See \code{\link{pchlist}} for a list of symbols.}
-  \item{labels}{Vector of length two specifying if the plot should contain symbols only (\kbd{0}), labels only (\kbd{1}) or both symbols and labels (\kbd{2}). Setting \code{labels} to \kbd{2} results in the symbols being plotted at the coordinates and the labels with an offset.}
+                 If set to \kbd{"absolute"} or \kbd{"relative"}, points with zero contribution are displayed in white. The higher the contribution of a point, the closer the corresponding colour to the one specified by the \code{col} option.
+}
+  \item{col}{Vector of length 2 specifying the colours of row and column point symbols, by default black for rows and red for columns. Colours can be entered in hexadecimal (e.g. \kbd{"#FF0000"}), rgb (e.g. \kbd{rgb(1,0,0)}) values or by R-name (e.g. \kbd{"red"}). 
+}
+  \item{pch}{Vector of length 4 giving the type of points to be used for row active and supplementary, column active and supplementary points. See \code{\link{pchlist}} for a list of symbols.
+}
+  \item{labels}{Vector of length two specifying if the plot should contain symbols only (\kbd{0}), labels only (\kbd{1}) or both symbols and labels (\kbd{2}). Setting \code{labels} to \kbd{2} results in the symbols being plotted at the coordinates and the labels with an offset.
+}
+  \item{collabels}{Determines the format used for column labels, when the columns are labeled in the plot. \cr 
+  \code{"both"} uses the factor names and level value, in the form \code{"factor:level"}\cr
+  \code{"level"} uses the factor level value only\cr
+  \code{"factor"} uses the factor name only
+  }
+
   \item{arrows}{Vector of two logicals specifying if the plot should contain points (\kbd{FALSE}, default) or arrows (\kbd{TRUE}). First value sets the rows and the second value sets the columns.}
-  \item{xlab, ylab}{Labels for horizontal and vertical axes.  The default, \code{"_auto_"} means that the function auto-generates a label of the form \code{Dimension X (xx.xx \%}}
+  \item{xlab, ylab}{Labels for horizontal and vertical axes.  The default, \code{"_auto_"} means that the function auto-generates a label of the form \code{Dimension X (xx.xx \%)}}
   \item{...}{Further arguments passed to \code{\link{plot}} and \code{\link{points}}.}
           }
 \details{

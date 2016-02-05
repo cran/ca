@@ -4,8 +4,10 @@
 \description{Graphical display of correspondence analysis in three dimensions}
 \usage{\method{plot3d}{ca}(x, dim = c(1, 2, 3), map = "symmetric", what = c("all", "all"), 
              contrib = c("none", "none"), col = c("#6666FF","#FF6666"), 
-             labcol  = c("#0000FF", "#FF0000"), pch = c(16, 1, 18, 9), 
-             labels = c(2, 2), sf = 0.00002, arrows  = c(FALSE, FALSE), ...) }
+             labcol = c("#0000FF", "#FF0000"), pch = c(16, 1, 18, 9), 
+             labels = c(2, 2), sf = 0.00001, arrows  = c(FALSE, FALSE),
+             axiscol = "#333333", axislcol = "#333333",
+			 laboffset = list(x = 0, y = 0.075, z = 0.05), ...) }
 \arguments{
   \item{x}{Simple correspondence analysis object returned by ca}
   \item{dim}{Numerical vector of length 2 indicating the dimensions to plot}
@@ -36,6 +38,9 @@
   \item{labels}{Vector of length two specifying if the plot should contain symbols only (\kbd{0}), labels only (\kbd{1}) or both symbols and labels (\kbd{2}). Setting \code{labels} to \kbd{2} results in the symbols being plotted at the coordinates and the labels with an offset.}
   \item{sf}{A scaling factor for the volume of the 3d primitives.}
   \item{arrows}{Vector of two logicals specifying if the plot should contain points (FALSE, default) or arrows (TRUE). First value sets the rows and the second value sets the columns.}
+  \item{axiscol}{Colour of the axis line.}
+  \item{axislcol}{Colour of the axis labels.}
+  \item{laboffset}{List with 3 slots specifying the label offset in x, y, and z direction.}
   \item{...}{Further arguments passed to the rgl functions.}
           }
 \seealso{\code{\link{ca}}}

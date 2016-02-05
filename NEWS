@@ -1,4 +1,36 @@
+Version 0.64 (2016-01-17)
+
+o mjca() with 'supcol!=NA': 
+  - Fixed Mass, ChiDist and Inertia values in print method.
+  - Fixed contributions in summary method.  
+o mjca() with 'subsetcol!=NA' and 'lambda=JCA': 
+  - Fixed warnings message ('In rep(1:Q.sub ...)')
+o Fixed row output for 'lambda!="indicator"' in mjca 
+  (rows were previously referring to the Burt matrix, now rows are from the original data)
+o Added cacoord() for extracting CA/MCA coordinates 
+  (standard/principal coordinates, and row-/column configurations for plotting)
+o Added caconv() for converting between CA/MCA data types 
+  (frequency tables, indicator/response pattern/Burt matrices)
+o mjca() has been made an S3 generic, with data.frame, table, and array methods
+o added .arrows() to draw nicer arrows with arrows=TRUE in plot.ca() and plot.mjca()
+o plot.ca() gains a lwd= argument for arrows and lines
+o Updated mjca.Rd with details of lambda= argument
+o Added multilines() for nicer mjca plots
+o plot.mcja gains a collabels= argument determining the form of column labels
+
+Version 0.61 (2015-05-18)
+
+o Fixed problem with nd='fixed value' in ca
+
+Version 0.60 (2015-03-01)
+
+o Temporarily enabled plotting rows in plot.mjca 
+o Use requireNamespace("rgl") in plot3d.ca.r to avoid NOTE in R CMD check
+
+Version 0.59 (2015-01-29)
+
 Version 0.58 (2014-12-31)
+
 o mjca(): Added option 'reti' (logical, if TRUE returns the indicator matrix as $indmat). 
 o mjca(): Fixed potentially negative eigenvalues (numerical issue; negative ev's are set to zero).
 o mjca(): Burt matrices ($Burt) now with row- and columnnames.

@@ -1,4 +1,8 @@
-export(ca, iterate.mjca, mjca, pchlist, plot3d.ca)
+import(stats)
+import(graphics)
+importFrom("grDevices", "col2rgb", "palette", "rgb")
+importFrom("utils", "type.convert")
+export(ca, iterate.mjca, mjca, pchlist, plot3d.ca, plot.ca, plot.mjca, cacoord, caconv, multilines)
 
 S3method(plot, ca)
 S3method(plot, mjca)
@@ -14,3 +18,8 @@ S3method(ca, data.frame)
 S3method(ca, formula)
 S3method(ca, table)
 S3method(ca, xtabs)
+
+S3method(mjca, table)
+S3method(mjca, array)
+S3method(mjca, data.frame)
+

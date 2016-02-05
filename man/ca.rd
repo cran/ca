@@ -37,7 +37,7 @@ ca(obj, ...)
   \item{subsetrow}{Row indices of subset.}
   \item{subsetcol}{Column indices of subset.}
   \item{data     }{A data frame against which to preferentially resolve variables in the \code{formula}}
-  \item{...      }{Other arguments passed to the ca.matrix method}
+  \item{...      }{Other arguments passed to the \code{ca.matrix} method}
           }
 \details{The function \code{ca} computes a simple correspondence analysis based on the 
          singular value decomposition.\cr
@@ -58,12 +58,17 @@ ca(obj, ...)
   \item{colinertia}{Column inertias}
   \item{colcoord  }{Column standard coordinates}
   \item{colsup    }{Indices of column supplementary points}
+  \item{N         }{The frequency table}
       }
-\references{Nenadic, O. and Greenacre, M. (2007). Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. \emph{Journal of Statistical Software}, \bold{20 (3)}, \url{http://www.jstatsoft.org/v20/i03/}\cr
-            Greenacre, M. (2007). \emph{Correspondence Analysis in Practice}. Second Edition. London: Chapman & Hall / CRC.\cr
+\references{
+Nenadic, O. and Greenacre, M. (2007). Correspondence analysis in R, with two- and three-dimensional graphics: The ca package. \emph{Journal of Statistical Software}, \bold{20 (3)}, \url{http://www.jstatsoft.org/v20/i03/}
+
+Greenacre, M. (2007). \emph{Correspondence Analysis in Practice}. Second Edition. London: Chapman & Hall / CRC.
             Blasius, J. and Greenacre, M. J. (1994), Computation of correspondence analysis, 
-            in \emph{Correspondence Analysis in the Social Sciences}, pp. 53-75, London: Academic Press.\cr
-            Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. \emph{Sociological Methods and Research}, \bold{35}, pp. 193-218.}
+            in \emph{Correspondence Analysis in the Social Sciences}, pp. 53-75, London: Academic Press.
+            
+Greenacre, M.J. and Pardo, R. (2006), Subset correspondence analysis: visualizing relationships among a selected set of response categories from a questionnaire survey. \emph{Sociological Methods and Research}, \bold{35}, pp. 193-218.
+}
 \seealso{\code{\link{svd}}, \code{\link{plot.ca}}, \code{\link{plot3d.ca}}, \code{\link{summary.ca}}, \code{\link{print.ca}} }
 \examples{ 
 data("author")
@@ -72,6 +77,12 @@ plot(ca(author))
 
 # table method
 haireye <- margin.table(HairEyeColor, 1:2)
-ca(haireye)
+haireye.ca <- ca(haireye)
+haireye.ca
+plot(haireye.ca)
+# some plot options
+plot(haireye.ca, lines=TRUE)
+plot(haireye.ca, arrows=c(TRUE, FALSE))
+
  }
 \keyword{multivariate}

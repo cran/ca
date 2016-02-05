@@ -4,9 +4,13 @@
 \description{Graphical display of correspondence analysis results in two dimensions}
 \usage{\method{plot}{ca}(x, dim = c(1,2), map = "symmetric", what = c("all", "all"), 
                mass = c(FALSE, FALSE), contrib = c("none", "none"), 
-               col = c("blue", "red"), pch = c(16, 21, 17, 24), 
-               labels = c(2, 2), arrows = c(FALSE, FALSE),
-               lines = c(FALSE, FALSE), xlab = "_auto_", ylab = "_auto_",
+               col = c("blue", "red"), 
+               pch = c(16, 21, 17, 24), 
+               labels = c(2, 2), 
+               arrows = c(FALSE, FALSE), 
+               lines = c(FALSE, FALSE), 
+               lwd=1,
+               xlab = "_auto_", ylab = "_auto_",
                col.lab = c("blue", "red"), ...) }
 \arguments{
   \item{x}{Simple correspondence analysis object returned by \code{\link{ca}}}
@@ -38,6 +42,7 @@
   \item{labels}{Vector of length two specifying if the plot should contain symbols only (\kbd{0}), labels only (\kbd{1}) or both symbols and labels (\kbd{2}). Setting \code{labels} to \kbd{2} results in the symbols being plotted at the coordinates and the labels with an offset.}
   \item{arrows}{Vector of two logicals specifying if the plot should contain points (\kbd{FALSE}, default) or arrows (\kbd{TRUE}). First value sets the rows and the second value sets the columns.}
   \item{lines}{Vector of two logicals specifying if the plot should join the points with lines (\kbd{FALSE}, default) or arrows (\kbd{TRUE}). First value sets the rows and the second value sets the columns.}
+  \item{lwd}{Line width for \code{arrows} and \code{lines}}
   \item{xlab, ylab}{Labels for horizontal and vertical axes.  The default, \code{"_auto_"} means that the function auto-generates a label of the form \code{Dimension X (xx.xx \%}}
   \item{col.lab}{Vector of length 2 specifying the colours of row and column point labels}
   \item{...}{Further arguments passed to \code{\link{plot}} and \code{\link{points}}.}
@@ -72,6 +77,7 @@ Gabriel, K.R. and Odoroff, C. (1990). Biplots in biomedical research. \emph{Stat
 Greenacre, M.J. (1993) \emph{Correspondence Analysis in Practice}. London: Academic Press. \cr
 Greenacre, M.J. (1993) Biplots in correspondence Analysis, \emph{Journal of Applied Statistics}, \bold{20}, pp. 251 - 269.
 }
+
 \seealso{\code{\link{ca}}, \code{\link{summary.ca}}, \code{\link{print.ca}}, \code{\link{plot3d.ca}}, \code{\link{pchlist}}}
 \examples{
 data("smoke")
