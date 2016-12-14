@@ -43,7 +43,9 @@ summary.ca <- function(object, scree = TRUE, rows = TRUE, columns = TRUE, ...){
     r.ccc  <- matrix(NA, nrow = length(r.names), ncol = nd * 3)
     for (i in 1:nd){
       r.ccc[,3 * (i - 1) + 1] <- rpc[,i]
-      r.ccc[,3 * (i - 1) + 2] <- rpc[,i]^2 / obj$rowdist^2
+#      r.ccc[,3 * (i - 1) + 2] <- rpc[,i]^2 / obj$rowdist^2
+rpc0 <- cacoord(obj, type = "principal", rows = TRUE)
+      r.ccc[,3 * (i - 1) + 2] <- rpc0[,i]^2 / apply(rpc0^2, 1, sum)
       r.ccc[,3 * (i - 1) + 3] <- obj$rowmass * rpc[,i]^2 /obj$sv[i]^2
       }
   if (nd > 1) {
@@ -79,7 +81,9 @@ summary.ca <- function(object, scree = TRUE, rows = TRUE, columns = TRUE, ...){
     c.ccc   <- matrix(NA, nrow = length(c.names), ncol = nd * 3)
     for (i in 1:nd){
       c.ccc[,3 * (i - 1) + 1] <- cpc[,i]
-      c.ccc[,3 * (i - 1) + 2] <- cpc[,i]^2 / obj$coldist^2
+#      c.ccc[,3 * (i - 1) + 2] <- cpc[,i]^2 / obj$coldist^2
+cpc0 <- cacoord(obj, type = "principal", cols = TRUE)
+      c.ccc[,3 * (i - 1) + 2] <- cpc0[,i]^2 / apply(cpc0^2, 1, sum)
       c.ccc[,3 * (i - 1) + 3] <- obj$colmass * cpc[,i]^2 /  obj$sv[i]^2
       }
     if (nd > 1) { 

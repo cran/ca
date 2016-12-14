@@ -290,7 +290,13 @@ mjca.default <- function(obj,
 ###      row.sc  <- col.sc
 ###      row.pc  <- col.pc
 #mjca2#      row.pc  <- t(t(Z[,subsetcol]) %*% diag(1/apply(Z[,subsetcol], 1, sum))) %*% col.sc
-      row.pc <- (Z/Q) %*% col.sc
+# 0.65:      row.pc <- (Z/Q) %*% col.sc
+      if (!is.na(subsetcol)[1]){
+        row.pc <- (Z[,subsetcol]/Q) %*% col.sc
+        } else {
+        row.pc <- (Z/Q) %*% col.sc
+        }
+## 0.65
       row.sc  <- row.pc %*% diag(1/evd.S$values[1:nd.max])
       col.ctr <- evd.S$vectors[,1:nd.max]^2
       col.cor <- col.pc^2 / apply(col.pc^2, 1, sum)
@@ -383,7 +389,14 @@ mjca.default <- function(obj,
 ###        row.sc     <- col.sc
 ###        row.pc     <- col.pc
 #mjca2#        row.pc <- t(t(Z[,subsetcol]) %*% diag(1/apply(Z[,subsetcol], 1, sum))) %*% col.sc
-        row.pc <- (Z/Q) %*% col.sc
+# 0.65:
+        if (!is.na(subsetcol)[1]){
+          row.pc <- (Z[,subsetcol]/Q) %*% col.sc
+          } else {
+          row.pc <- (Z/Q) %*% col.sc
+          }
+#        row.pc <- (Z/Q) %*% col.sc
+## 0.65:
         row.sc <- row.pc %*% diag(1/evd.S0$values[1:K0])
        # Subset & Supplementary variables:
         if(!is.na(supcol)[1]){
@@ -416,6 +429,10 @@ mjca.default <- function(obj,
         B.star  <- B.it[[1]]
         JCA.it  <- B.it[[2]]
         subin   <- subinr(B.star, levels.n)
+# 0.65:
+#        colnames(B.star) <- col.names
+#        rownames(B.star) <- col.names
+##0.65:
         P       <- B.star / sum(B.star)
         cm      <- apply(P, 2, sum)
         eP      <- cm %*% t(cm)
@@ -427,7 +444,14 @@ mjca.default <- function(obj,
 ###        row.sc  <- col.sc
 ###        row.pc  <- col.pc
 #mjca2#        row.pc <- t(t(Z) %*% diag(1/apply(Z, 1, sum))) %*% col.sc
-        row.pc <- (Z/Q) %*% col.sc
+# 0.65:
+     #   if (!is.na(subsetcol)[1]){
+     #     row.pc <- (Z[,subsetcol]/Q) %*% col.sc
+     #     } else {
+          row.pc <- (Z/Q) %*% col.sc
+     #     }
+#        row.pc <- (Z/Q) %*% col.sc
+## 0.65:
         row.sc <- row.pc %*% diag(1/sqrt(lambda0))
         inertia.mod      <- sum(subin - diag(diag(subin)))
         inertia.discount <- sum(diag(subin))
@@ -451,7 +475,16 @@ mjca.default <- function(obj,
         if (!is.na(subsetcol)[1]){
          # template matrix:
  #          foo0 <- rep(1:Q.sub, each = levels.n.sub)
-          foo0 <- rep(1:Q.sub, levels.n.sub)
+# 0.65:
+qstmp.out <- rep(0, length(levels.n.sub))
+qstmp     <- matrix(1:Q.sub, nrow = 1)
+colnames(qstmp) <- cn.0
+for (qstmp0 in 1:length(levels.n.sub)){
+  qstmp.out[qstmp0] <- qstmp[,grep(names(levels.n.sub)[qstmp0], colnames(qstmp))]
+  }
+          foo0 <- rep(qstmp.out, levels.n.sub)
+## 0.65
+#          foo0 <- rep(1:Q.sub, levels.n.sub)
           foo1 <- (foo0) %*% t(rep(1, sum(levels.n.sub))) - t((foo0) %*% 
                     t(rep(1, sum(levels.n.sub))))
           upd.template <- ifelse(foo1 == 0, TRUE, FALSE)
@@ -500,7 +533,14 @@ mjca.default <- function(obj,
 ###          row.sc  <- col.sc
 ###          row.pc  <- col.pc
 #mjca2#          row.pc <- t(t(Z[,subsetcol]) %*% diag(1/apply(Z[,subsetcol], 1, sum))) %*% col.sc
-          row.pc <- (Z/Q) %*% col.sc
+# 0.65:
+#          row.pc <- (Z/Q) %*% col.sc
+          if (!is.na(subsetcol)[1]){
+            row.pc <- (Z[,subsetcol]/Q) %*% col.sc
+            } else {
+            row.pc <- (Z/Q) %*% col.sc
+            }
+## 0.65:
           row.sc <- row.pc %*% diag(1/Bsub.red.SVD$d[1:nd])
           Sm      <- Bsub.red.S
           inertia.col.red.discount <- apply((upd.template * Sm)^2, 2, sum )
@@ -598,6 +638,10 @@ mjca.default <- function(obj,
  # (2014-10, returning Indicator matrix)
   if (reti == TRUE){
     indmat <- Z.0
+# 0.65:
+    colnames(indmat) <- col.names
+    rownames(indmat) <- rn.0
+##0.65:
     } else {
     indmat <- NA
     }  
@@ -616,6 +660,16 @@ mjca.default <- function(obj,
     dimnames(B.out) <- list(col.names[-ind.sup.foo], col.names[-ind.sup.foo])
     } else { 
     dimnames(B.out) <- list(col.names, col.names)
+    }
+### 0.70 fix 
+#  colnames(subin) <- cn.0
+#  rownames(subin) <- cn.0
+  if (is.na(supcol[1])){
+    colnames(subin) <- cn.0
+    rownames(subin) <- cn.0
+    } else {
+    colnames(subin) <- cn.0[-supcol]
+    rownames(subin) <- cn.0[-supcol]
     }
  # wrap up results
   mjca.output <- list(sv         = sqrt(lambda0), 

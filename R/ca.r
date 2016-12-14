@@ -181,9 +181,15 @@ ca.matrix <- function(obj,
     rin0           <- rep(NA, I)
     rin0[-suprow]  <- rin
     rin            <- rin0
+	rm.old <- rm
+    rm <- rm0
     }
   if (!is.na(supcol[1])) {
-    rs             <- rm
+    if (!is.na(suprow[1])) {
+      rs <- rm.old
+      } else {
+      rs <- rm
+      }
     phi.00         <- phi
     base2          <- SC / matrix(cs.sum, nrow = nrow(SC), ncol = ncol(SC), byrow = TRUE)
     rs.0           <- matrix(rs, nrow = nrow(base2), ncol = ncol(base2))
@@ -200,6 +206,7 @@ ca.matrix <- function(obj,
     cin0           <- rep(NA, J)
     cin0[-supcol]  <- cin
     cin            <- cin0
+    cm <- cm0
     }
   if (exists("phi3")){
     phi <- phi3
@@ -207,12 +214,12 @@ ca.matrix <- function(obj,
   if (exists("gam3")){
     gam <- gam3
     }
-  if (exists("rm0")){
-    rm <- rm0
-    }
-  if (exists("cm0")){
-    cm <- cm0
-    }
+#  if (exists("rm0")){
+#    rm <- rm0
+#    }
+#  if (exists("cm0")){
+#    cm <- cm0
+#    }
   dims <- paste0("Dim", seq_along(sv))[1:nd] 
   dimnames(phi) <- list(rn, dims)
   dimnames(gam) <- list(cn, dims)
