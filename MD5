@@ -1,7 +1,7 @@
-c52bf1088ef402b80ee90ed72a8855ac *DESCRIPTION
+21975713a673878b762f9898937bfffc *DESCRIPTION
 f5daa04e0460fe0fd3f9b7c331dbdd68 *INDEX
-95dcef42c11559ac8083834c1c4bf6b2 *NAMESPACE
-4e4433f36c95ea39a1683679b9144793 *NEWS
+aec1da716bcdd1dd3aeae14f62510783 *NAMESPACE
+93e00716f883e2f7aa893feae3814f12 *NEWS
 fe7ee288de1f2528f99762eef37e6bda *R/ca.r
 688525218e264cef56102b97f7125d11 *R/caconv.r
 42fc5cd52f991ff1f3127713d36469e5 *R/cacoord.r
@@ -20,9 +20,9 @@ cad666f7fbb684b6fdb1c1d260ec3681 *R/print.ca.r
 0d53e66ca9374b51d9fce0c2a6417e2a *R/subinr.r
 ee51ea3af89459cc83449e1abbf545fa *R/summary.ca.r
 14071705c58c1e2f76e2074c95db87b3 *R/summary.mjca.r
-df5e998a266fae6f6cc0c9dee6e7d6e9 *data/author.rda
-7450fecaf725210594988ba1f54fb46c *data/smoke.rda
-6c66f3fe82316a99d4863774d942b58c *data/wg93.rda
+2c26952e02f3349c933580a7c9ad73a3 *data/author.rda
+346e33082c91d398451a8374159ee770 *data/smoke.rda
+efc3a4413d6925d9edfea36df891adc0 *data/wg93.rda
 6f3dee332c42d379ade5295bc18ab91c *inst/CITATION
 9db527c094d1ca925dbaf2fc0b01d251 *man/author.rd
 4c4c2c09ec2166aac6aca1d3db6e62a4 *man/ca.rd
