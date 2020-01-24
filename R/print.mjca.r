@@ -40,7 +40,7 @@ print.mjca <- function(x, ...){
   dimnames(tmp)[[1]] <- c("Mass", "ChiDist", "Inertia", dn)
   Column.profiles <- tmp
   cat("\n Eigenvalues:\n")
-  print.table(Eigenvalues, width = 4)
+  print.table(Eigenvalues) #, width = 4)
   cat("\n\n Columns:\n")
   print(round(Column.profiles, 6))
   }

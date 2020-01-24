@@ -1,4 +1,4 @@
-21975713a673878b762f9898937bfffc *DESCRIPTION
+83a8ca165e01349089826b6f5cd0ec82 *DESCRIPTION
 f5daa04e0460fe0fd3f9b7c331dbdd68 *INDEX
 aec1da716bcdd1dd3aeae14f62510783 *NAMESPACE
 93e00716f883e2f7aa893feae3814f12 *NEWS
@@ -13,8 +13,8 @@ fe7ee288de1f2528f99762eef37e6bda *R/ca.r
 5d116296784df1b385eddc6107c8ab08 *R/plot.ca.r
 f0e5c9fe233917b04a8d64d847378a46 *R/plot.mjca.r
 02c88c031d0c0161fa814c29e0cda722 *R/plot3d.ca.r
-cad666f7fbb684b6fdb1c1d260ec3681 *R/print.ca.r
-84966b1a20e580506e19d29b56d5da6a *R/print.mjca.r
+c058a0d2d6dec9a3d216a01eb85b9a89 *R/print.ca.r
+5fdf5731913dbd41d984de3fd2d1587a *R/print.mjca.r
 4466d6e3b3967a28bda057a4488d49c3 *R/print.summary.ca.r
 30d56a0023c9cf71cb2a91a7faefa5aa *R/print.summary.mjca.r
 0d53e66ca9374b51d9fce0c2a6417e2a *R/subinr.r

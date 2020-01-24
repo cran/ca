@@ -1,5 +1,5 @@
 Package: ca
-Version: 0.71
+Version: 0.71.1
 Date: 2018-10-10
 Title: Simple, Multiple and Joint Correspondence Analysis
 Authors@R: c(person(given = "Michael", family = "Greenacre", role = "aut", email = "michael.greenacre@upf.edu"),
@@ -16,10 +16,7 @@ LazyLoad: yes
 LazyData: yes
 License: GPL
 URL: http://www.carme-n.org/
-Repository: CRAN
-Repository/R-Forge/Project: ca0
-Repository/R-Forge/Revision: 39
-Repository/R-Forge/DateTimeStamp: 2018-10-10 17:12:30
-Date/Publication: 2018-10-10 18:10:02 UTC
 NeedsCompilation: no
-Packaged: 2018-10-10 17:30:25 UTC; rforge
+Packaged: 2020-01-23 13:25:58 UTC; ripley
+Repository: CRAN
+Date/Publication: 2020-01-24 06:59:53 UTC

@@ -38,7 +38,7 @@ print.ca <- function(x, ...){
   dimnames(tmp)[[1]] <- c("Mass", "ChiDist", "Inertia", dn)
   Column.profiles <- tmp
   cat("\n Principal inertias (eigenvalues):\n")
-  print.table(Eigenvalues, width = 4)
+  print.table(Eigenvalues)#, width = 4)
   cat("\n\n Rows:\n")
   print(round(Row.profiles, 6))
   cat("\n\n Columns:\n")
